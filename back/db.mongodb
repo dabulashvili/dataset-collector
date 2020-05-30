@@ -1,0 +1,13 @@
+use('dataset');
+
+db.users.drop();
+
+db.users.insertMany([
+  {'email' : 'datobula@gmail.com', 'passwordHash' : '$2b$10$xTRFdH0fqV3Q4Hh2HJx4eOaohN/GlfYSPqy8iIze8sFHw9TNnIAeC'},
+]);
+
+db.sentenses.drop();
+
+db.sentenses.insertMany([
+  
+])

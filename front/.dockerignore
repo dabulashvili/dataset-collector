@@ -1,0 +1,6 @@
+.git
+.idea
+*.md
+!README*.md
+test
+helm
