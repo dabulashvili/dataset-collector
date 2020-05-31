@@ -1,15 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useContext, useState } from 'react';
 import './App.css';
-import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
+import LogIn from "./components/login.component";
 import MainPage from "./components/main-page.component"
-import login from "./components/login.component"
+
+import UserContext from './context/user-context';
 
 function App() {
+
+  const [user, setUser] = useState({})
+
+  const updateUser = (user) => {
+    setUser(user)
+    localStorage.setItem('user', JSON.stringify(user))
+  }
+
+  const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={(props) => {
+      return (Object.keys(user).length
+        ? <Component {...props} />
+        : <Redirect to='/login' />
+      )
+    }
+    } />
+  )
+
   return (
-    <MainPage></MainPage>
+    <Router>
+      <Route path="/login" render={() => <LogIn setUser={updateUser}></LogIn>} />
+      <UserContext.Provider value={{ user }}>
+        <PrivateRoute path="/" exact component={MainPage} />
+      </UserContext.Provider>
+    </Router>
   );
 }
 

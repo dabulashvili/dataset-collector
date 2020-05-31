@@ -1,12 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import "bootstrap/dist/css/bootstrap.min.css";
+// import logo from './logo.svg';
+// import './App.css';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-import SentencesList from "./components/sentences-list.component"
-import PutVoice from "./components/put-voice.component"
-import EditVoice from "./components/edit-voice.component"
+import SentencesList from "./sentences-list.component"
+import PutVoice from "./put-voice.component"
+import EditVoice from "./edit-voice.component"
 
 function MainPage() {
   return (
@@ -15,7 +14,7 @@ function MainPage() {
       <div className="container">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <a class="navbar-brand" href="https://codingthesmartway.com" target="_blank">
-            <img src={logo} width="30" height="30" alt="CodingTheSmartWay.com" />
+            {/* <img src={logo} width="30" height="30" alt="CodingTheSmartWay.com" /> */}
           </a>
           <Link to="/" className="navbar-brand">Dataset recording app</Link>
           <div className="collpase navbar-collapse">
