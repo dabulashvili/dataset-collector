@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 
 
 import Paper from '@material-ui/core/Paper';
+import Modal from "./record-modal.component";
 
 const useStyles = makeStyles({
     table: {
@@ -55,12 +56,20 @@ const rows = [
 
 export default function SentenceList() {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     return (
         <div className={classes.main}>
             <span className={classes.title}>Sentences</span>
             <div className={classes.outerTable}>
-                <TableContainer classes={{ root: classes.root }} component={Paper}>
+                <TableContainer classes={{root: classes.root}} component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
                         <TableHead>
                             <TableRow>
@@ -75,9 +84,9 @@ export default function SentenceList() {
                                         {row.name}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button>
+                                        <Button onClick={handleClickOpen}>
                                             Record
-                  </Button>
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -85,6 +94,7 @@ export default function SentenceList() {
                     </Table>
                 </TableContainer>
             </div>
+            <Modal open={open} handleClose={handleClose}/>
         </div>
 
     );
