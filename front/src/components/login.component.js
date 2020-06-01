@@ -54,7 +54,6 @@ export default function LogIn(props) {
         } catch (e) {
             console.log(e)
         }
-
         setUser(data)
     }
 
