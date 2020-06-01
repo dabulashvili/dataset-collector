@@ -28,7 +28,7 @@ app.post('/login', async (req, res) => {
         }
     }
 
-    res.send('Username or password incorrect');
+    res.status(401).send('Username or password incorrect');
 });
 
 const authenticateJWT = async (req, res, next) => {

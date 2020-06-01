@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
@@ -18,6 +18,7 @@ function App() {
 
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={(props) => {
+      console.log(user)
       return (Object.keys(user).length
         ? <Component {...props} />
         : <Redirect to='/login' />
@@ -28,7 +29,7 @@ function App() {
 
   return (
     <Router>
-      <Route path="/login" render={() => <LogIn setUser={updateUser}></LogIn>} />
+      <Route path="/login" render={props => <LogIn {...props} setUser={updateUser}></LogIn>} />
       <UserContext.Provider value={{ user }}>
         <PrivateRoute path="/" exact component={MainPage} />
       </UserContext.Provider>

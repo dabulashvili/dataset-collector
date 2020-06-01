@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import AuthService from '../services/auth.service'
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -47,15 +48,19 @@ export default function LogIn(props) {
         setPassword(event.target.value);
     }
 
-    const login = async () => {
-        let data
+    const login = async (event) => {
+        event.preventDefault()
+        let data = {}
         try {
             data = await AuthService.login(email, password)
+
+            if (data && data._id) {
+                setUser(data)
+                props.history.push('/');
+            }
         } catch (e) {
             console.log(e)
         }
-
-        setUser(data)
     }
 
     return (
@@ -68,7 +73,7 @@ export default function LogIn(props) {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} noValidate onSubmit={login}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -100,8 +105,7 @@ export default function LogIn(props) {
                         label="Remember me"
                     />
                     <Button
-                        onClick={login}
-                        // type="submit"
+                        type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
