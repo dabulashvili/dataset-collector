@@ -17,12 +17,15 @@ app.post('/login', async (req, res) => {
 
         if (match) {
             // Generate an access token
-            const accessToken = jwt.sign({ 
+            const userData = { 
                 ...user,
                 passwordHash: undefined
-             }, accessTokenSecret);
+             }
+
+            const accessToken = jwt.sign(userData, accessTokenSecret);
 
             return res.json({
+                ...userData,
                 accessToken
             });
         }

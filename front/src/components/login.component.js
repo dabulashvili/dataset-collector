@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Redirect } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,8 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import AuthService from '../services/auth.service'
-import { Redirect } from 'react-router-dom';
+import { UserContext } from '../context/user-context'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -34,7 +34,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function LogIn(props) {
-    const { setUser } = props
+
+    const { state, dispatch } = useContext(UserContext)
+
     const classes = useStyles();
 
     const [email, setEmail] = useState('');
@@ -50,17 +52,15 @@ export default function LogIn(props) {
 
     const login = async (event) => {
         event.preventDefault()
-        let data = {}
         try {
-            data = await AuthService.login(email, password)
-
-            if (data && data._id) {
-                setUser(data)
-                props.history.push('/');
-            }
+            dispatch({ type: 'login', email, password })
         } catch (e) {
             console.log(e)
         }
+    }
+
+    if (state.user) {
+        return <Redirect to='/' />
     }
 
     return (

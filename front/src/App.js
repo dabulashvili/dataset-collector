@@ -1,38 +1,36 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
-import LogIn from "./components/login.component";
 import MainPage from "./components/main-page.component"
+import LogIn from "./components/login.component"
 
-import UserContext from './context/user-context';
+// import { AuthService } from './services/auth.service'
+import { UserProvider, UserContext } from './context/user-context'
+
 
 function App() {
 
-  const [user, setUser] = useState({})
+  const PrivateRoute = ({ component: Component, ...rest }) => {
+    const { state } = useContext(UserContext)
 
-  const updateUser = (user) => {
-    setUser(user)
-    localStorage.setItem('user', JSON.stringify(user))
+    console.log(state)
+
+    return (
+      <Route {...rest} render={(props) => (
+        state.user
+          ? <Component {...props} />
+          : <Redirect to='/login' />
+      )} />
+    )
   }
-
-  const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={(props) => {
-      console.log(user)
-      return (Object.keys(user).length
-        ? <Component {...props} />
-        : <Redirect to='/login' />
-      )
-    }
-    } />
-  )
 
   return (
     <Router>
-      <Route path="/login" render={props => <LogIn {...props} setUser={updateUser}></LogIn>} />
-      <UserContext.Provider value={{ user }}>
+      <UserProvider>
+        <Route path="/login" component={LogIn} />
         <PrivateRoute path="/" exact component={MainPage} />
-      </UserContext.Provider>
+      </UserProvider>
     </Router>
   );
 }
