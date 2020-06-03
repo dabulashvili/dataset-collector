@@ -4,12 +4,14 @@ import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom
 
 import MainPage from "./components/main-page.component"
 import LogIn from "./components/login.component"
+import Header from "./components/header.component"
+import EditVoice from "./components/edit-voice.component"
 
 // import { AuthService } from './services/auth.service'
 import { UserProvider, UserContext } from './context/user-context'
 
 
-function App() {
+function App(props) {
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
     const { state } = useContext(UserContext)
@@ -27,8 +29,10 @@ function App() {
 
   return (
     <Router>
+    <Header props={props}/>
       <UserProvider>
         <Route path="/login" component={LogIn} />
+        <PrivateRoute path="/edit-voice" component={EditVoice} />
         <PrivateRoute path="/" exact component={MainPage} />
       </UserProvider>
     </Router>

@@ -8,15 +8,16 @@ import EditVoice from "./edit-voice.component"
 import { UserContext } from '../context/user-context'
 
 function MainPage() {
-
   const { state, dispach } = useContext(UserContext)
 
   return (
+    <>
     <Router>
         <Route path="/" exact component={SentencesList} />
         <Route path="/voice" component={PutVoice} />
         <Route path="/voice/:sentenceId" component={EditVoice} />
     </Router>
+    </>
   );
 }
 
