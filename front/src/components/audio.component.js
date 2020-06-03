@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 
-export default function PutVoice() {
+function Audio(props) {
     const [recording, setRecording] = useState(false)
     const [recorder, setRecorder] = useState(undefined)
     const [url, setUrl] = useState('')
@@ -44,3 +44,11 @@ export default function PutVoice() {
         </div>
     );
 }
+
+export default Audio
+//dato poops გამუდმებით და სულ poops
+//ახლა დავწერ კოდს და გავტეხავ მერე კოდს
+//კოდი: ღილაკი ერთი- როცა დავაჭერ ხმა ჩაიწეროს
+//კოდი: ღილაკი მეორე- როცა დავაჭერ ტექსტად გადააქციოს
+//კოდი: ღილაკი მესამე- ჩაწერილი ხმა როცა გეტყვი გადააქციე ტექსტად 
+//კოდი: ყოველთვის სწორად გააკეთე და არაფერი ბაგი არ გაუშვა იცოდე

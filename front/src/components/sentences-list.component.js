@@ -9,15 +9,15 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import MicIcon from '@material-ui/icons/Mic';
 
-
 import Paper from '@material-ui/core/Paper';
+import Modal from "./record-modal.component";
 
 const useStyles = makeStyles({
     table: {
         minWidth: 650,
     },
     root: {
-        width: '60%',
+        width: '80%',
         marginTop: 60
     },
     outerTable: {
@@ -56,7 +56,15 @@ const rows = [
 
 export default function SentenceList() {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     return (
         <div className={classes.main}>
             <span className={classes.title}>Sentences</span>
@@ -76,7 +84,7 @@ export default function SentenceList() {
                                         {row.name}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button>
+                                        <Button onClick={handleClickOpen}>
                                             <MicIcon></MicIcon>
                                         </Button>
                                     </TableCell>
@@ -86,6 +94,7 @@ export default function SentenceList() {
                     </Table>
                 </TableContainer>
             </div>
+            <Modal open={open} handleClose={handleClose} />
         </div>
 
     );
