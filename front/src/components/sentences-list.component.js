@@ -36,35 +36,15 @@ const useStyles = makeStyles({
     }
 });
 
-const rows = [
-    {
-        name: 'zoro',
-    },
-    {
-        name: 'zoro0',
-    },
-    {
-        name: 'zoro1',
-    },
-    {
-        name: 'zoro2',
-    },
-    {
-        name: 'zoro3',
-    },
-];
 
-export default function SentenceList() {
+export default function SentenceList({history, rows}) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    const handleClickOpen = (id) => {
+        history.push(`/single-record/${id}`)
     };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
     return (
         <div className={classes.main}>
             <span className={classes.title}>Sentences</span>
@@ -78,14 +58,16 @@ export default function SentenceList() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
+                            {rows.map((row, i) => (
                                 <TableRow key={row.name}>
                                     <TableCell component="th" scope="row">
                                         {row.name}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button onClick={handleClickOpen}>
-                                            <MicIcon></MicIcon>
+                                        <Button onClick={() => {
+                                            handleClickOpen(i)
+                                        }}>
+                                            <MicIcon />
                                         </Button>
                                     </TableCell>
                                 </TableRow>
@@ -94,7 +76,6 @@ export default function SentenceList() {
                     </Table>
                 </TableContainer>
             </div>
-            <Modal open={open} handleClose={handleClose} />
         </div>
 
     );
