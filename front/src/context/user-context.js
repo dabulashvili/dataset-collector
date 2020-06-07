@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useCallback } from 'react';
 
 import { AuthService } from '../services/auth.service'
 
-const initialState = { user: JSON.parse(localStorage.getItem('user')) }
+const initialState = { user: JSON.parse(sessionStorage.getItem('user')) }
 
 const UserContext = createContext(initialState);
 
@@ -12,7 +12,7 @@ let reducer = (state, action) => {
             return { ...state, user: action.user }
         }
         case "logout": {
-            localStorage.removeItem('user')
+            sessionStorage.removeItem('user')
             return { ...state, user: undefined };
         }
         default:
@@ -29,7 +29,7 @@ function UserProvider(props) {
         switch (action.type) {
             case "login": {
                 const user = await AuthService.login(action.email, action.password);
-                localStorage.setItem('user', JSON.stringify(user))
+                sessionStorage.setItem('user', JSON.stringify(user))
                 dispatch({
                     type: "login",
                     user

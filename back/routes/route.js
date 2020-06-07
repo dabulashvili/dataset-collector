@@ -10,7 +10,7 @@ const router = express();
 
 
 router.use('/auth', auth);
-router.use('/sentense', authMiddleware, sentense);
+router.use('/sentence', authMiddleware, sentense);
 router.use('/record', authMiddleware, record);
 
 module.exports = router;

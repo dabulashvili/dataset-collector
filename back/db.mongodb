@@ -9,5 +9,8 @@ db.users.insertMany([
 db.sentenses.drop();
 
 db.sentenses.insertMany([
-  
+  {    
+    text: "პირველი წინდადება",
+    meta: { type: Object },
+  }
 ])

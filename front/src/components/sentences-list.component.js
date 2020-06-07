@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,6 +11,9 @@ import MicIcon from '@material-ui/icons/Mic';
 
 import Paper from '@material-ui/core/Paper';
 import Modal from "./record-modal.component";
+
+import SentenceService from "../services/sentence.service"
+import { UserContext } from '../context/user-context';
 
 const useStyles = makeStyles({
     table: {
@@ -36,38 +39,27 @@ const useStyles = makeStyles({
     }
 });
 
-const rows = [
-    {
-        name: 'zoro',
-    },
-    {
-        name: 'zoro0',
-    },
-    {
-        name: 'zoro1',
-    },
-    {
-        name: 'zoro2',
-    },
-    {
-        name: 'zoro3',
-    },
-];
-
 export default function SentenceList() {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [sentences, setSentences] = useState([]);
+    const { state } = useContext(UserContext)
 
     const handleClickOpen = () => {
         setOpen(true);
     };
+
+    useEffect(() => {
+        SentenceService.list(state.user.accessToken).then(data => {
+            setSentences(data)
+        })
+    })
 
     const handleClose = () => {
         setOpen(false);
     };
     return (
         <div className={classes.main}>
-            <span className={classes.title}>Sentences</span>
             <div className={classes.outerTable}>
                 <TableContainer classes={{ root: classes.root }} component={Paper}>
                     <Table className={classes.table} aria-label="simple table">
@@ -78,10 +70,10 @@ export default function SentenceList() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <TableRow key={row.name}>
+                            {sentences.map((sentence) => (
+                                <TableRow key={sentence._id}>
                                     <TableCell component="th" scope="row">
-                                        {row.name}
+                                        {sentence.text}
                                     </TableCell>
                                     <TableCell align="right">
                                         <Button onClick={handleClickOpen}>

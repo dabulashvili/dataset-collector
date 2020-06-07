@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 const useStyles = makeStyles({
   root: {
     width: '100%',
-    background: 'blue'
+    background: 'green'
   },
   selected: {
       color: '#fff',
@@ -35,9 +35,9 @@ export default function Header({props}) {
       showLabels
       className={classes.root}
     >
-      <BottomNavigationAction classes={{label: classes.label, selected: classes.selected}} label="home" value='/'/>
-      <BottomNavigationAction classes={{label: classes.label,selected: classes.selected}} label="voice" value='/voice'/>
-      <BottomNavigationAction classes={{label: classes.label,selected: classes.selected}} label="edit voice" value='/edit-voice'/>
+      <BottomNavigationAction classes={{label: classes.label, selected: classes.selected}} label="Sentences" value='/'/>
+      <BottomNavigationAction classes={{label: classes.label,selected: classes.selected}} label="My Records" value='/voice'/>
+      <BottomNavigationAction classes={{label: classes.label,selected: classes.selected}} label="Record Next" value='/edit-voice'/>
     </BottomNavigation>
   );
 }
