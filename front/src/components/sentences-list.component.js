@@ -39,14 +39,13 @@ const useStyles = makeStyles({
     }
 });
 
-export default function SentenceList() {
+export default function SentenceList({history}) {
     const classes = useStyles();
-    const [open, setOpen] = useState(false);
     const [sentences, setSentences] = useState([]);
     const { state } = useContext(UserContext)
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    const handleClickOpen = (sentence) => {
+        history.push(`/single-record/${sentence._id}`, { sentence })
     };
 
     useEffect(() => {
@@ -55,9 +54,6 @@ export default function SentenceList() {
         })
     })
 
-    const handleClose = () => {
-        setOpen(false);
-    };
     return (
         <div className={classes.main}>
             <div className={classes.outerTable}>
@@ -76,8 +72,10 @@ export default function SentenceList() {
                                         {sentence.text}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button onClick={handleClickOpen}>
-                                            <MicIcon></MicIcon>
+                                        <Button onClick={() => {
+                                            handleClickOpen(sentence)
+                                        }}>
+                                            <MicIcon />
                                         </Button>
                                     </TableCell>
                                 </TableRow>
@@ -86,8 +84,6 @@ export default function SentenceList() {
                     </Table>
                 </TableContainer>
             </div>
-            <Modal open={open} handleClose={handleClose} />
         </div>
-
     );
 }
