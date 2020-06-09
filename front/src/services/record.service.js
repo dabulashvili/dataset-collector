@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import baseUrl from './base-url';
 
 import { handleResponse } from '../helpers/handle-response';
@@ -18,7 +17,7 @@ function list(token, page, limit) {
         page,
         limit
     })
-    return fetch(`${baseUrl}sentence/list${query}`, requestOptions)
+    return fetch(`${baseUrl}record/list${query}`, requestOptions)
         .then(handleResponse)
 }
 
@@ -31,25 +30,31 @@ function getById(token, id) {
         },
     };
 
-    return fetch(`${baseUrl}sentence/${id}`, requestOptions)
+    return fetch(`${baseUrl}record/${id}`, requestOptions)
         .then(handleResponse)
 }
 
-function next(token) {
+function save(token, sentence, audio) {
+    const formData = new FormData();
+
+    formData.append('sentence', sentence._id)
+    formData.append('audio', audio)
+
+    console.log(formData)
     const requestOptions = {
-        method: 'GET',
+        method: 'POST',
+        body: formData,
         headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
         },
     };
 
-    return fetch(`${baseUrl}sentence/next`, requestOptions)
+    return fetch(`${baseUrl}record/save`, requestOptions)
         .then(handleResponse)
 }
 
 export default {
     list,
     getById,
-    next,
+    save,
 };

@@ -6,10 +6,10 @@ db.users.insertMany([
   {'email' : 'datobula@gmail.com', 'passwordHash' : '$2b$10$xTRFdH0fqV3Q4Hh2HJx4eOaohN/GlfYSPqy8iIze8sFHw9TNnIAeC'},
 ]);
 
-db.sentenses.drop();
+db.sentences.drop();
 
-db.sentenses.insertMany([
-  {    
+db.sentences.insertMany([
+  {
     text: "პირველი წინდადება",
     meta: { type: Object },
   }

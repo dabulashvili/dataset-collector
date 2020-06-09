@@ -3,11 +3,11 @@ const mongoosePaginate = require('mongoose-paginate');
 
 const Schema = mongoose.Schema;
 
-const SentenseSchema = new Schema({
+const SentenceSchema = new Schema({
     text: { type: String },
     meta: { type: Object },
-}, {collection: 'sentenses'});
+}, {collection: 'sentences'});
 
-SentenseSchema.plugin(mongoosePaginate);
+SentenceSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model('Sentense', SentenseSchema);
+module.exports = mongoose.model('Sentence', SentenceSchema);

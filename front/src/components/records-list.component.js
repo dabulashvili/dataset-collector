@@ -11,7 +11,7 @@ import MicIcon from '@material-ui/icons/Mic';
 
 import Paper from '@material-ui/core/Paper';
 
-import SentenceService from "../services/sentence.service"
+import RecordService from "../services/record.service"
 import { UserContext } from '../context/user-context';
 import { useHistory } from 'react-router-dom';
 
@@ -39,10 +39,10 @@ const useStyles = makeStyles({
     }
 });
 
-export default function SentenceList() {
+export default function RecordsList() {
     const classes = useStyles();
     const history = useHistory();
-    const [sentences, setSentences] = useState([]);
+    const [records, setRecords] = useState([]);
     const { state } = useContext(UserContext)
 
     const handleClickOpen = (sentence) => {
@@ -50,8 +50,8 @@ export default function SentenceList() {
     };
 
     useEffect(() => {
-        SentenceService.list(state.user.accessToken).then(data => {
-            setSentences(data)
+        RecordService.list(state.user.accessToken).then(data => {
+            setRecords(data)
         })
     }, [])
 
@@ -62,19 +62,19 @@ export default function SentenceList() {
                     <Table className={classes.table} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Sentence</TableCell>
+                                <TableCell>Record</TableCell>
                                 <TableCell align="right">Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {sentences.map((sentence) => (
-                                <TableRow key={sentence._id}>
+                            {records.map((record) => (
+                                <TableRow key={record._id}>
                                     <TableCell component="th" scope="row">
-                                        {sentence.text}
+                                        {record.text}
                                     </TableCell>
                                     <TableCell align="right">
                                         <Button onClick={() => {
-                                            handleClickOpen(sentence)
+                                            handleClickOpen(record)
                                         }}>
                                             <MicIcon />
                                         </Button>

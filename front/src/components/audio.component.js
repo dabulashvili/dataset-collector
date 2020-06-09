@@ -40,7 +40,7 @@ const useStyles = makeStyles({
         margin: '3rem auto'
     }
 });
-const Audio = ({ next, prev }) => {
+const Audio = ({ next, prev, handleRecord }) => {
     const classes = useStyles();
     const [recording, setRecording] = useState(false)
     const [recorder, setRecorder] = useState(undefined)
@@ -57,7 +57,8 @@ const Audio = ({ next, prev }) => {
             });
 
             mediaRecorder.addEventListener("stop", () => {
-                const audioBlob = new Blob(audioChunks);
+                const audioBlob = new Blob(audioChunks, {type: "audio/mpeg-3"});
+                handleRecord(audioBlob)
                 const audioUrl = URL.createObjectURL(audioBlob);
                 setUrl(audioUrl)
             });

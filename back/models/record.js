@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const RecordSchema = new Schema({
     url: {type: String},
     user: {type: String, ref: 'User'},
-    sentense: {type: String, ref: 'Sentense'},
+    sentence: {type: String, ref: 'Sentence'},
     recordDate: { type: Date, default: Date.now },
 }, {
     collection: 'records',
