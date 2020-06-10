@@ -1,0 +1,1 @@
+![Node.js CI](https://github.com/dabulashvili/dataset-collector/workflows/Node.js%20CI/badge.svg)
