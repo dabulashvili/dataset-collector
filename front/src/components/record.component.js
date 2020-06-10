@@ -106,7 +106,7 @@ const RecordComponent = ({ location, history, match }) => {
                             </Box>
                         </Box>
                         <Button disabled={!currentRecord} onClick={save}>
-                            <SaveIcon/>
+                            <SaveIcon />
                         </Button>
                     </div>
             }

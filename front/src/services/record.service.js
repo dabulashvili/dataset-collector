@@ -40,7 +40,6 @@ function save(token, sentence, audio) {
     formData.append('sentence', sentence._id)
     formData.append('audio', audio)
 
-    console.log(formData)
     const requestOptions = {
         method: 'POST',
         body: formData,

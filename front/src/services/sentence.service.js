@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import baseUrl from './base-url';
 
 import { handleResponse } from '../helpers/handle-response';

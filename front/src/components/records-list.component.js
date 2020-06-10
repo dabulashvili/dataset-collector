@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -6,8 +6,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import MicIcon from '@material-ui/icons/Mic';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
 
 import Paper from '@material-ui/core/Paper';
 
@@ -43,9 +45,14 @@ export default function RecordsList() {
     const classes = useStyles();
     const history = useHistory();
     const [records, setRecords] = useState([]);
+    const [currentAudio, setCurrentAudio] = useState({
+        play: false,
+        url: '',
+        audio: null
+    })
     const { state } = useContext(UserContext)
 
-    const handleClickOpen = (sentence) => {
+    const handleClickOpen = ({ sentence }) => {
         history.push(`/record/${sentence._id}`, { sentence })
     };
 
@@ -54,6 +61,43 @@ export default function RecordsList() {
             setRecords(data)
         })
     }, [])
+
+    const playRecord = (record) => {
+        if (record.url === currentAudio.url) {
+            if (currentAudio.play) {
+                currentAudio.audio.pause()
+                setCurrentAudio({
+                    ...currentAudio,
+                    play: false,
+                })
+            } else {
+                currentAudio.audio.play()
+                setCurrentAudio({
+                    ...currentAudio,
+                    play: true,
+                })
+            }
+        } else {
+            if (currentAudio.audio) {
+                currentAudio.audio.removeEventListener('ended', () => setCurrentAudio({
+                    ...currentAudio,
+                    play: false,
+                }));
+            }
+
+            let newAudio = new Audio(record.url);
+            newAudio.play();
+            newAudio.addEventListener('ended', () => setCurrentAudio({
+                ...currentAudio,
+                play: false
+            }));
+            setCurrentAudio({
+                url: record.url,
+                audio: newAudio,
+                play: true,
+            })
+        }
+    }
 
     return (
         <div className={classes.main}>
@@ -70,14 +114,21 @@ export default function RecordsList() {
                             {records.map((record) => (
                                 <TableRow key={record._id}>
                                     <TableCell component="th" scope="row">
-                                        {record.text}
+                                        <IconButton color="primary" onClick={() => playRecord(record)}>
+                                            {
+                                                currentAudio.play
+                                                    ? <PauseIcon />
+                                                    : <PlayArrowIcon />
+                                            }
+                                        </IconButton>
+                                        {record.sentence.text}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button onClick={() => {
+                                        <IconButton color="primary" onClick={() => {
                                             handleClickOpen(record)
                                         }}>
                                             <MicIcon />
-                                        </Button>
+                                        </IconButton>
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -7,6 +7,7 @@ const uploadToS3 = require('../utils/uploadToS3')
 const app = express.Router();
 
 app.get('/list', async (req, res) => {
+    console.log(req.user)
     const records = await Record.find({ user: req.user._id }).populate('sentence').exec()
     res.json(records)
 })

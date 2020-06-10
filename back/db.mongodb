@@ -14,3 +14,6 @@ db.sentences.insertMany([
     meta: { type: Object },
   }
 ])
+
+db.record.drop()
+db.records.drop()
