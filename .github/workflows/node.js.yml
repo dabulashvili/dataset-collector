@@ -10,28 +10,22 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  update:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x]
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: SSH and deploy node app
+      uses: appleboy/ssh-action@master
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install and test
-      run: |
-        npm install
-        npm test
-      env:
-        CI: true
-  deploy:
-    needs: [build]
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ~/dataset-collector
+          git pull origin master
+  deploy-back:
+    needs: [update]
     runs-on: ubuntu-latest
 
     steps:
@@ -44,6 +38,21 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd ~/dataset-collector/back
-          git pull origin master
           npm install --production
           pm2 restart start
+  deploy-front:
+    needs: [update]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: SSH and deploy node app
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ~/dataset-collector/frond
+          npm run build
+          cp -r ~/dataset-collector/front/build/* /var/www/collect.tts.ge/
