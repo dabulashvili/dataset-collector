@@ -11,7 +11,7 @@ module.exports = configs => {
 
     mongoose(configs.mongoUrl);
 
-    app.use('/', router);
+    app.use('/api', router);
 
     app.listen(configs.port, function () {
         console.log(`Server is running on Port: ${configs.port}`);
