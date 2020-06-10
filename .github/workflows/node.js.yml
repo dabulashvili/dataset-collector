@@ -37,8 +37,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          cd ~/dataset-collector/back
-          npm install --production
+          cd ~/dataset-collector/back && npm install --production
           pm2 restart 0
   deploy-front:
     needs: [update]
@@ -53,6 +52,5 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          cd ~/dataset-collector/frond
-          npm run build
+          cd ~/dataset-collector/front && npm run build
           cp -r ~/dataset-collector/front/build/* /var/www/collect.tts.ge/
