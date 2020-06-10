@@ -57,7 +57,7 @@ export default function TopBar(props) {
             <AppBar position="static" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" className={classes.title}>
-                        Geo TTS Dataset
+                        Hello, {state.user.name || 'let\'s do it'}!
                     </Typography>
                     <nav>
                         <NavLink variant="button" color="textPrimary" to="/sentences" activeClassName={classes.activeLink} className={classes.link}>

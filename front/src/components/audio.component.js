@@ -7,6 +7,8 @@ import PauseIcon from '@material-ui/icons/Pause';
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import TextField from "@material-ui/core/TextField";
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles({
     root: {
@@ -38,11 +40,13 @@ const useStyles = makeStyles({
         margin: '3rem auto'
     }
 });
-const Audio = ({ next, prev, handleRecord }) => {
+const AudioComponent = ({ next, prev, handleRecord, saveRecord, currentRecord }) => {
     const classes = useStyles();
-    const [recording, setRecording] = useState(false)
-    const [recorder, setRecorder] = useState(undefined)
-    const [url, setUrl] = useState('')
+    const [recording, setRecording] = useState(false);
+    const [recorder, setRecorder] = useState(undefined);
+    const [url, setUrl] = useState(currentRecord ? currentRecord.url || '' : '');
+    const [play, setPlay] = useState(false);
+    const [audio, setAudio] = useState(null);
 
     useEffect(() => {
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
@@ -55,7 +59,7 @@ const Audio = ({ next, prev, handleRecord }) => {
             });
 
             mediaRecorder.addEventListener("stop", () => {
-                const audioBlob = new Blob(audioChunks, {type: "audio/mpeg-3"});
+                const audioBlob = new Blob(audioChunks, { type: "audio/mpeg-3" });
                 handleRecord(audioBlob)
                 const audioUrl = URL.createObjectURL(audioBlob);
                 setUrl(audioUrl)
@@ -66,22 +70,33 @@ const Audio = ({ next, prev, handleRecord }) => {
         return setRecorder(false)
     }, [])
 
-    const startRecording = () => {
-        recorder.start()
-        setRecording(true)
-    }
-
-    const stopRecording = () => {
-        recorder.stop()
-        setRecording(false)
-    }
-
-    const handleClick = () => {
-        if (recording) {
-            stopRecording()
+    const togglePlay = () => {
+        if (!play) {
+            if (!audio) {
+                let newAudio = new Audio(url)
+                newAudio.play();
+                newAudio.addEventListener('ended', () => {
+                    setPlay(false)
+                });
+                setAudio(newAudio)
+                setPlay(true)
+            } else {
+                audio.play()
+                setPlay(true)
+            }
         } else {
-            startRecording()
+            audio.pause()
+            setPlay(false)
         }
+    }
+
+    const toggleRecording = () => {
+        if (recording) {
+            recorder.stop()
+        } else {
+            recorder.start()
+        }
+        setRecording(!recording)
     }
 
     const handleKeyPress = (e) => {
@@ -92,11 +107,13 @@ const Audio = ({ next, prev, handleRecord }) => {
             next()
         }
         if (e.keyCode === 32) {
-            if (recording) {
-                stopRecording()
-            } else {
-                startRecording()
-            }
+            toggleRecording()
+        }
+        if (e.keyCode === 77) {
+            togglePlay()
+        }
+        if (e.keyCode === 83) {
+            saveRecord()
         }
     }
 
@@ -107,27 +124,32 @@ const Audio = ({ next, prev, handleRecord }) => {
                 <IconButton className={classes.buttonForArrows} aria-label="add an alarm" size='medium'>
                     <ArrowBackIosIcon fontSize="large" />
                 </IconButton>
+                <IconButton color="primary" disabled={!url} onClick={togglePlay}>
+                    {
+                        play
+                            ? <PauseIcon />
+                            : <PlayArrowIcon />
+                    }
+                </IconButton>
                 <IconButton
-                    onClick={handleClick}
+                    onClick={toggleRecording}
                     className={classes.button}
-                    aria-label="add an alarm"
-                    size='medium'>
+                    aria-label="add an alarm">
                     {
                         recording
                             ? <PauseIcon fontSize="large" />
                             : <MicIcon fontSize="large" />
                     }
                 </IconButton>
+                <IconButton color="primary" disabled={!url} onClick={saveRecord}>
+                    <SaveIcon />
+                </IconButton>
                 <IconButton className={classes.buttonForArrows} aria-label="add an alarm" size='medium'>
                     <ArrowForwardIosIcon fontSize="large" />
                 </IconButton>
             </Box>
-            {
-                url && !recording
-                && <audio src={url} controls="controls" />
-            }
         </Box>
     );
 }
 
-export default Audio
+export default AudioComponent

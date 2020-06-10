@@ -12,9 +12,10 @@ app.post('/login', async (req, res) => {
     // Filter user from the users array by username and password
     const user = await User.findOne({ email: email.toLowerCase() }).lean().exec();
 
+    console.log(user)
     if (user) {
         const match = await bcrypt.compare(password, user.passwordHash);
-
+        console.log(match)
         if (match) {
             // Generate an access token
             const userData = { 
@@ -31,7 +32,7 @@ app.post('/login', async (req, res) => {
         }
     }
 
-    res.status(401).send('Username or password incorrect');
+    res.status(401).json('USER_PASS_INCORRECT');
 });
 
 const authenticateJWT = async (req, res, next) => {

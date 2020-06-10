@@ -6,7 +6,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import MicIcon from '@material-ui/icons/Mic';
 
 import Paper from '@material-ui/core/Paper';
@@ -73,11 +73,11 @@ export default function SentenceList() {
                                         {sentence.text}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button onClick={() => {
+                                        <IconButton color="primary" onClick={() => {
                                             handleClickOpen(sentence)
                                         }}>
                                             <MicIcon />
-                                        </Button>
+                                        </IconButton>
                                     </TableCell>
                                 </TableRow>
                             ))}

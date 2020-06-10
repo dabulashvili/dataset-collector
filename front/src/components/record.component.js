@@ -4,9 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Audio from "./audio.component";
 import sentenceService from '../services/sentence.service';
 import { UserContext } from '../context/user-context';
-import { Button } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
 import recordService from '../services/record.service';
+import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles({
     root: {
@@ -47,10 +46,19 @@ const RecordComponent = ({ location, history, match }) => {
     const [sentence, setSentence] = useState(location.state && location.state.sentence || {});
     const [allDone, setAllDone] = useState(false);
     const [currentRecord, setCurrentRecord] = useState(null);
+    const [saving, setSaving] = useState(true)
+    const [loading, setLoading] = useState(true)
+    const [uploaded, setUploaded] = useState(null)
 
     const next = () => {
-        // const id = myId === (rows.length - 1) ? rows.length - 1 : myId + 1
-        // route(id)
+        sentenceService.next(state.user.accessToken).then(data => {
+            if (data) {
+                route(data._id, data)
+            } else {
+                setAllDone(true)
+            }
+            setLoading(false)
+        })
     }
     const prev = () => {
         // const id = myId === 0 ? 0 : myId - 1
@@ -60,8 +68,9 @@ const RecordComponent = ({ location, history, match }) => {
     const save = () => {
         recordService.save(state.user.accessToken, sentence, currentRecord)
             .then(data => {
-                console.log(data)
-                // move to next
+                next()
+            }).catch(error => {
+                console.error(error)
             })
     }
 
@@ -71,44 +80,45 @@ const RecordComponent = ({ location, history, match }) => {
 
     useEffect(() => {
         if (!currentId) {
-            sentenceService.next(state.user.accessToken).then(data => {
-                if (data) {
-                    route(data._id, data)
-                } else {
-                    setAllDone(true)
-                }
+
+            next()
+        } else {
+
+            recordService.getById(state.user.accessToken, currentId).then(data => {
+                setUploaded(data)
             })
-        } else if (!sentence._id) {
+
             sentenceService.getById(state.user.accessToken, currentId).then(data => {
                 setSentence(data)
+                setLoading(false)
             })
         }
-    }, [currentId, sentence, allDone])
+    }, [])
 
     return (
         <div>
             {
-                allDone
-                    ? <div>
-                        <span className={classes.title} >
-                            All Done!
+                loading ? <div />
+                    : allDone
+                        ? <div>
+                            <span className={classes.title} >
+                                All Done!
                         </span>
-                    </div>
-                    : <div>
-                        <Box className={classes.root}>
-                            <span className={classes.title}>
-                                {sentence.text}
-                            </span>
-                            <Box className={classes.content}>
-                                <Box className={classes.mic}>
-                                    <Audio next={next} prev={prev} handleRecord={handleRecord} />
+                        </div>
+                        : <div>
+                            <Container maxWidth="sm">
+                                <Box className={classes.root}>
+                                    <span className={classes.title}>
+                                        {sentence.text}
+                                    </span>
+                                    <Box className={classes.content}>
+                                        <Box className={classes.mic}>
+                                            <Audio next={next} prev={prev} handleRecord={handleRecord} saveRecord={save} currentRecord={uploaded} />
+                                        </Box>
+                                    </Box>
                                 </Box>
-                            </Box>
-                        </Box>
-                        <Button disabled={!currentRecord} onClick={save}>
-                            <SaveIcon />
-                        </Button>
-                    </div>
+                            </Container>
+                        </div>
             }
         </div>
     );

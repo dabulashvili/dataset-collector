@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const Record = require('../models/record')
 const upload = require('../utils/createMulterMiddleware')
@@ -7,9 +8,13 @@ const uploadToS3 = require('../utils/uploadToS3')
 const app = express.Router();
 
 app.get('/list', async (req, res) => {
-    console.log(req.user)
     const records = await Record.find({ user: req.user._id }).populate('sentence').exec()
     res.json(records)
+})
+
+app.get('/:sentenceId', async (req, res) => {
+    let record = await Record.findOne({ user: req.user._id, sentence: req.params.sentenceId })
+    res.json(record)
 })
 
 app.delete('/:id', async (req, res) => {
@@ -19,15 +24,22 @@ app.delete('/:id', async (req, res) => {
 
 app.post('/save', upload.single('audio'), async (req, res) => {
     const upload = await uploadToS3(req.file, req.user._id)
-
-    console.log(req.body)
-    console.log(req.body.sentence)
-    const newRecord = await new Record({
+    let record = await Record.findOne({
         sentence: req.body.sentence,
         user: req.user._id,
-        url: upload
-    }).save()
-    res.json(newRecord)
+    })
+
+    if (!record) {
+        record = await new Record({
+            sentence: req.body.sentence,
+            user: req.user._id,
+            url: upload
+        }).save()
+    } else {
+        record.url = upload
+        record.save()
+    }
+    res.json(record)
 })
 
 module.exports = app;

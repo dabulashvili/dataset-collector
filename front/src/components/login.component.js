@@ -10,6 +10,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Alert from '@material-ui/lab/Alert';
 
 import { UserContext } from '../context/user-context'
 
@@ -51,12 +52,9 @@ export default function LogIn(props) {
     }
 
     const login = async (event) => {
+        dispatch({ type: 'retry' })
         event.preventDefault()
-        try {
-            dispatch({ type: 'login', email, password })
-        } catch (e) {
-            console.log(e)
-        }
+        dispatch({ type: 'login', email, password })
     }
 
     if (state.user) {
@@ -104,6 +102,11 @@ export default function LogIn(props) {
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                     />
+                    {
+                        state.authFailed && <Alert severity="error">
+                            Username or password incorrect!
+                        </Alert>
+                    }
                     <Button
                         type="submit"
                         fullWidth

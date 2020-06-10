@@ -3,7 +3,8 @@ use('dataset');
 db.users.drop();
 
 db.users.insertMany([
-  {'email' : 'datobula@gmail.com', 'passwordHash' : '$2b$10$xTRFdH0fqV3Q4Hh2HJx4eOaohN/GlfYSPqy8iIze8sFHw9TNnIAeC'},
+  // {'email' : 'datobula@gmail.com', 'passwordHash' : '$2b$10$xTRFdH0fqV3Q4Hh2HJx4eOaohN/GlfYSPqy8iIze8sFHw9TNnIAeC'},
+  {'email' : 'jincharadze.tam@gmail.com', 'passwordHash': '$2b$10$Lkr2j6Ss4xOdDrve0Hp34.8CiaFN7a72CdeMl4REMwRFPC3XUfHCa'}
 ]);
 
 db.sentences.drop();
