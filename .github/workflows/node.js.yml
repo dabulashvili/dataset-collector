@@ -39,7 +39,7 @@ jobs:
         script: |
           cd ~/dataset-collector/back
           npm install --production
-          pm2 restart start
+          pm2 restart 0
   deploy-front:
     needs: [update]
     runs-on: ubuntu-latest
