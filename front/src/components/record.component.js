@@ -6,11 +6,16 @@ import sentenceService from '../services/sentence.service';
 import { UserContext } from '../context/user-context';
 import recordService from '../services/record.service';
 import Container from '@material-ui/core/Container';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles({
     root: {
         width: '100%',
         textAlign: 'center'
+    },
+    disabled: {
+        pointerEvents: 'none'
     },
     title: {
         fontSize: 32,
@@ -42,17 +47,18 @@ const RecordComponent = ({ location, history, match }) => {
     const currentId = match.params.id;
     const route = (id, sentence) => history.push(`/record/${id}`, { sentence })
 
-    const { state } = useContext(UserContext);
-    const [sentence, setSentence] = useState(location.state && location.state.sentence || {});
-    const [allDone, setAllDone] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
+    const { state: { user } } = useContext(UserContext);
     const [currentRecord, setCurrentRecord] = useState(null);
-    const [saving, setSaving] = useState(true)
-    const [loading, setLoading] = useState(true)
-    const [uploaded, setUploaded] = useState(null)
+    const [sentence, setSentence] = useState(location.state ? location.state.sentence : {});
+    const [allDone, setAllDone] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [record, setRecord] = useState(null);
 
     const next = () => {
-        sentenceService.next(state.user.accessToken).then(data => {
+        sentenceService.next(user.accessToken).then(data => {
             if (data) {
+                setSentence(data)
                 route(data._id, data)
             } else {
                 setAllDone(true)
@@ -60,22 +66,28 @@ const RecordComponent = ({ location, history, match }) => {
             setLoading(false)
         })
     }
+
     const prev = () => {
         // const id = myId === 0 ? 0 : myId - 1
         // route(id)
     }
 
     const save = () => {
-        recordService.save(state.user.accessToken, sentence, currentRecord)
+        setLoading(true)
+        recordService.save(user.accessToken, sentence, currentRecord)
             .then(data => {
-                next()
+                enqueueSnackbar('Record saved successfully!', { variant: 'success' });
+                setLoading(false);
+                next();
             }).catch(error => {
+                enqueueSnackbar('Error saving record!', { variant: 'error' });
+                setLoading(false);
                 console.error(error)
             })
     }
 
     const handleRecord = (recordBlob) => {
-        setCurrentRecord(recordBlob)
+        setCurrentRecord(recordBlob);
     }
 
     useEffect(() => {
@@ -83,42 +95,45 @@ const RecordComponent = ({ location, history, match }) => {
 
             next()
         } else {
-
-            recordService.getById(state.user.accessToken, currentId).then(data => {
-                setUploaded(data)
-            })
-
-            sentenceService.getById(state.user.accessToken, currentId).then(data => {
-                setSentence(data)
+            Promise.all([
+                recordService.getById(user.accessToken, currentId).then(data => {
+                    setRecord(data);
+                    return
+                }),
+                sentenceService.getById(user.accessToken, currentId).then(data => {
+                    setSentence(data);
+                    return
+                })
+            ]).then(() => {
                 setLoading(false)
             })
         }
-    }, [])
+    }, [currentId])
 
     return (
         <div>
             {
-                loading ? <div />
-                    : allDone
-                        ? <div>
-                            <span className={classes.title} >
-                                All Done!
+                allDone
+                    ? <div>
+                        <span className={classes.title} >
+                            All Done!
                         </span>
-                        </div>
-                        : <div>
-                            <Container maxWidth="sm">
-                                <Box className={classes.root}>
-                                    <span className={classes.title}>
-                                        {sentence.text}
-                                    </span>
-                                    <Box className={classes.content}>
-                                        <Box className={classes.mic}>
-                                            <Audio next={next} prev={prev} handleRecord={handleRecord} saveRecord={save} currentRecord={uploaded} />
-                                        </Box>
+                    </div>
+                    : <div>
+                        {loading && <LinearProgress />}
+                        <Container maxWidth="sm">
+                            <Box className={`${classes.root} ${loading && classes.disabled}`}>
+                                <span className={classes.title}>
+                                    {sentence.text}
+                                </span>
+                                <Box className={classes.content}>
+                                    <Box className={classes.mic}>
+                                        <Audio next={next} prev={prev} handleRecord={handleRecord} saveRecord={save} currentRecord={record} />
                                     </Box>
                                 </Box>
-                            </Container>
-                        </div>
+                            </Box>
+                        </Container>
+                    </div>
             }
         </div>
     );

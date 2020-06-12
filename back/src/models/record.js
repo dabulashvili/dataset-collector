@@ -3,10 +3,11 @@ const mongoosePaginate = require('mongoose-paginate');
 const Schema = mongoose.Schema;
 
 const RecordSchema = new Schema({
-    url: {type: String},
-    user: {type: String, ref: 'User'},
-    sentence: {type: String, ref: 'Sentence'},
+    url: { type: String },
+    user: { type: String, ref: 'User' },
+    sentence: { type: String, ref: 'Sentence' },
     recordDate: { type: Date, default: Date.now },
+    duration: { type: Number }
 }, {
     collection: 'records',
 });

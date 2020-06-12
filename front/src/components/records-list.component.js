@@ -79,6 +79,7 @@ export default function RecordsList() {
             }
         } else {
             if (currentAudio.audio) {
+                currentAudio.audio.pause()
                 currentAudio.audio.removeEventListener('ended', () => setCurrentAudio({
                     ...currentAudio,
                     play: false,
@@ -116,7 +117,7 @@ export default function RecordsList() {
                                     <TableCell component="th" scope="row">
                                         <IconButton color="primary" onClick={() => playRecord(record)}>
                                             {
-                                                currentAudio.play
+                                                record.url === currentAudio.url && currentAudio.play
                                                     ? <PauseIcon />
                                                     : <PlayArrowIcon />
                                             }

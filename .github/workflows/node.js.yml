@@ -52,6 +52,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          cd ~/dataset-collector/front && npm run build
+          cd ~/dataset-collector/front && npm install && npm run build
           rm -rf /var/www/collect.tts.ge/*
           cp -r ~/dataset-collector/front/build/* /var/www/collect.tts.ge/

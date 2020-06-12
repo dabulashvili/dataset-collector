@@ -9,7 +9,7 @@ import RecordComponent from "./components/record.component"
 
 import { UserProvider, UserContext } from './context/user-context'
 import RecordsList from './components/records-list.component';
-
+import { SnackbarProvider } from 'notistack';
 
 function App() {
   const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -30,10 +30,12 @@ function App() {
     <Router>
       <UserProvider>
         <Route path="/login" component={LogIn} />
-        <PrivateRoute path="/" exact component={() => <Redirect to='/sentences' />} />
-        <PrivateRoute path="/sentences" exact component={SentenceList} />
-        <PrivateRoute path="/records" component={RecordsList} />
-        <PrivateRoute path="/record/:id?" component={RecordComponent} />
+        <SnackbarProvider>
+          <PrivateRoute path="/" exact component={() => <Redirect to='/sentences' />} />
+          <PrivateRoute path="/sentences" exact component={SentenceList} />
+          <PrivateRoute path="/records" component={RecordsList} />
+          <PrivateRoute path="/record/:id?" component={RecordComponent} />
+        </SnackbarProvider>
       </UserProvider>
     </Router>
   );

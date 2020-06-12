@@ -1,7 +1,7 @@
 import baseUrl from './base-url';
 
 import { handleResponse } from '../helpers/handle-response';
-import qs from '../helpers/querystring'
+import qs from 'querystring'
 
 function list(token, page, limit) {
 
@@ -13,11 +13,11 @@ function list(token, page, limit) {
         },
     };
 
-    const query = qs({
+    const query = qs.stringify({
         page,
         limit
     })
-    return fetch(`${baseUrl}sentence/list${query}`, requestOptions)
+    return fetch(`${baseUrl}sentence/list?${query}`, requestOptions)
         .then(handleResponse)
 }
 

@@ -5,7 +5,7 @@ module.exports = async (audioPath, outputPath) => {
         '-i',
         audioPath,
         '-acodec',
-         'libmp3lame',
+        'pcm_u8',
         outputPath
     ]
 

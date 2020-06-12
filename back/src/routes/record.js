@@ -23,7 +23,7 @@ app.delete('/:id', async (req, res) => {
 })
 
 app.post('/save', upload.single('audio'), async (req, res) => {
-    const upload = await uploadToS3(req.file, req.user._id)
+    const { url, duration } = await uploadToS3(req.file, req.user._id)
     let record = await Record.findOne({
         sentence: req.body.sentence,
         user: req.user._id,
@@ -33,7 +33,8 @@ app.post('/save', upload.single('audio'), async (req, res) => {
         record = await new Record({
             sentence: req.body.sentence,
             user: req.user._id,
-            url: upload
+            url,
+            duration: parseFloat(duration)
         }).save()
     } else {
         record.url = upload
