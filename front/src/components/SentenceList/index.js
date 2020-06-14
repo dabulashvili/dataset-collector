@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,37 +9,12 @@ import TableRow from '@material-ui/core/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 import MicIcon from '@material-ui/icons/Mic';
 import TablePagination from '@material-ui/core/TablePagination';
-
 import Paper from '@material-ui/core/Paper';
-
-import SentenceService from "../services/sentence.service"
-import { UserContext } from '../context/user-context';
-import { useHistory } from 'react-router-dom';
 import qs from 'query-string';
 
-const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
-    },
-    root: {
-        width: '80%',
-        marginTop: 60
-    },
-    outerTable: {
-        display: 'flex',
-        justifyContent: 'space-around',
-        width: '100%'
-    },
-    main: {
-        width: '100%',
-        textAlign: 'center',
-        paddingTop: 10,
-    },
-    title: {
-        fontSize: 24,
-        lineHeight: 1
-    }
-});
+import SentenceService from "../../services/sentence.service"
+import { UserContext } from '../../context/user-context';
+import useStyles from './style'
 
 export default function SentenceList(props) {
     const { page, limit } = qs.parse(props.location.search)
@@ -61,14 +36,14 @@ export default function SentenceList(props) {
     const handleChangePage = (event, newPage) => {
         props.history.push({
             pathname: props.location.pathname,
-            search: "?" + qs.stringify({ page: newPage + 1, limit })
+            search: qs.stringify({ page: newPage + 1, limit })
         })
     }
     const handleChangeRowsPerPage = (event) => {
         let newLimit = parseInt(event.target.value, 10);
         props.history.push({
             pathname: props.location.pathname,
-            search: "?" + qs.stringify({ page: 1, limit: newLimit })
+            search: qs.stringify({ page: 1, limit: newLimit })
         })
     }
 
@@ -94,9 +69,9 @@ export default function SentenceList(props) {
                             </TableHead>
                             <TableBody>
                                 {data.docs.map((sentence) => (
-                                    <TableRow key={sentence._id}>
+                                    <TableRow className={sentence.skip && classes.skipedRow} key={sentence._id}>
                                         <TableCell component="th" scope="row">
-                                            {sentence.text}
+                                            {sentence.text} {sentence.skip && ' (skipped)'}
                                         </TableCell>
                                         <TableCell align="right">
                                             <IconButton color="primary" onClick={() => {

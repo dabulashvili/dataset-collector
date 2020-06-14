@@ -1,7 +1,20 @@
 import baseUrl from './base-url';
 
 import { handleResponse } from '../helpers/handle-response';
-import qs from '../helpers/querystring'
+import qs from 'query-string';
+
+function total(token) {
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    };
+
+    return fetch(`${baseUrl}record/total`, requestOptions)
+        .then(handleResponse)
+}
 
 function list(token, page, limit) {
 
@@ -13,11 +26,11 @@ function list(token, page, limit) {
         },
     };
 
-    const query = qs({
+    const query = qs.stringify({
         page,
         limit
     })
-    return fetch(`${baseUrl}record/list${query}`, requestOptions)
+    return fetch(`${baseUrl}record/list?${query}`, requestOptions)
         .then(handleResponse)
 }
 
@@ -56,4 +69,5 @@ export default {
     list,
     getById,
     save,
+    total,
 };

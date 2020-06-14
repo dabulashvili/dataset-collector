@@ -19,7 +19,7 @@ function login(email, password) {
         .then(handleResponse)
 }
 
-export const AuthService = {
+export default {
     login,
     logout,
 };

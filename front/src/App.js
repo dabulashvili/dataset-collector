@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
-
-import SentenceList from "./components/sentences-list.component"
-import LogIn from "./components/login.component"
-import TopBar from "./components/app-bar.component"
-import RecordComponent from "./components/record.component"
-
-import { UserProvider, UserContext } from './context/user-context'
-import RecordsList from './components/records-list.component';
 import { SnackbarProvider } from 'notistack';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+
+import { UserProvider, UserContext } from './context/user-context';
+import LogIn from './components/Login';
+import TopBar from './components/TopBar';
+import Record from './components/Record';
+import RecordsList from './components/RecordList';
+import SentenceList from './components/SentenceList';
+
+import './App.css';
 
 function App() {
   const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -29,12 +29,12 @@ function App() {
   return (
     <Router>
       <UserProvider>
-        <Route path="/login" component={LogIn} />
+        <Route path='/login' component={LogIn} />
         <SnackbarProvider>
-          <PrivateRoute path="/" exact component={() => <Redirect to='/sentences' />} />
-          <PrivateRoute path="/sentences" exact component={SentenceList} />
-          <PrivateRoute path="/records" component={RecordsList} />
-          <PrivateRoute path="/record/:id?" component={RecordComponent} />
+          <PrivateRoute path='/' exact component={() => <Redirect to='/sentences' />} />
+          <PrivateRoute path='/sentences' exact component={SentenceList} />
+          <PrivateRoute path='/records' component={RecordsList} />
+          <PrivateRoute path='/record/:id?' component={Record} />
         </SnackbarProvider>
       </UserProvider>
     </Router>

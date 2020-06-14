@@ -8,8 +8,29 @@ const uploadToS3 = require('../utils/uploadToS3')
 const app = express.Router();
 
 app.get('/list', async (req, res) => {
-    const records = await Record.find({ user: req.user._id }).populate('sentence').exec()
+    let page = req.query.page ? parseInt(req.query.page) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    const records = await Record.paginate({ user: req.user._id }, {
+        page,
+        limit,
+        lean: true,
+        populate: 'sentence',
+    })
     res.json(records)
+})
+
+app.get('/total', async (req, res) => {
+    let totalRecord = await Record.aggregate([
+        { $match: { 'user': req.user._id } },
+        {
+            $group: {
+                _id: "duration",
+                totalRecorded: { $sum: "$duration" }
+            }
+        }
+    ])
+
+    res.json(totalRecord[0])
 })
 
 app.get('/:sentenceId', async (req, res) => {

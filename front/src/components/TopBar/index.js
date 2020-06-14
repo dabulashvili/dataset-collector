@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,43 +8,10 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
-import { UserContext } from '../context/user-context'
+import { UserContext } from '../../context/user-context';
+import useStyles from './style';
 
-const useStyles = makeStyles((theme) => ({
-    '@global': {
-        ul: {
-            margin: 0,
-            padding: 0,
-            listStyle: 'none',
-        },
-    },
-    appBar: {
-        borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-    link: {
-        margin: theme.spacing(1, 1.5),
-        fontWeight: '20px',
-        textDecoration: 'none',
-        color: 'white',
-    },
-    toolbar: {
-        flexWrap: 'wrap',
-    },
-    activeLink: {
-        textDecoration: 'underline',
-    },
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
-
-export default function TopBar(props) {
+export default function TopBar({ children }) {
 
     const classes = useStyles();
 
@@ -78,7 +44,7 @@ export default function TopBar(props) {
                     </Tooltip>
                 </Toolbar>
             </AppBar >
-            {props.children}
+            {children}
         </div>
     );
 }

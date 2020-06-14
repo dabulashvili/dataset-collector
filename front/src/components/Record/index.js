@@ -1,48 +1,17 @@
 import React, { useEffect, useContext, useState } from 'react';
 import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
-import Audio from "./audio.component";
-import sentenceService from '../services/sentence.service';
-import { UserContext } from '../context/user-context';
-import recordService from '../services/record.service';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Backdrop from '@material-ui/core/Backdrop';
 import { useSnackbar } from 'notistack';
 
-const useStyles = makeStyles({
-    root: {
-        width: '100%',
-        textAlign: 'center'
-    },
-    disabled: {
-        pointerEvents: 'none'
-    },
-    title: {
-        fontSize: 32,
-        padding: 20,
-        color: '#000',
-        display: "block"
-    },
-    content: {
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center"
-    },
-    button: {
-        padding: 20,
-        backgroundColor: 'red'
-    },
-    buttonForArrows: {
-        padding: 20,
-        backgroundColor: "transparent"
-    },
-    mic: {
-        width: '96%',
-        margin: '0 auto'
-    }
-});
+import Audio from '../Audio';
+import { UserContext } from '../../context/user-context';
+import sentenceService from '../../services/sentence.service';
+import recordService from '../../services/record.service';
+import useStyles from './style';
 
-const RecordComponent = ({ location, history, match }) => {
+export default function Record({ location, history, match }) {
     const classes = useStyles();
     const currentId = match.params.id;
     const route = (id, sentence) => history.push(`/record/${id}`, { sentence })
@@ -55,6 +24,18 @@ const RecordComponent = ({ location, history, match }) => {
     const [loading, setLoading] = useState(false);
     const [record, setRecord] = useState(null);
 
+    const afterRequest = () => {
+        setLoading(false)
+    }
+
+    const skip = () => {
+        setLoading(true)
+        sentenceService.skip(user.accessToken, currentId).then(data => {
+            console.log(data)
+            next()
+        }).finally(afterRequest)
+    }
+
     const next = () => {
         sentenceService.next(user.accessToken).then(data => {
             if (data) {
@@ -63,13 +44,7 @@ const RecordComponent = ({ location, history, match }) => {
             } else {
                 setAllDone(true)
             }
-            setLoading(false)
-        })
-    }
-
-    const prev = () => {
-        // const id = myId === 0 ? 0 : myId - 1
-        // route(id)
+        }).finally(afterRequest)
     }
 
     const save = () => {
@@ -77,13 +52,13 @@ const RecordComponent = ({ location, history, match }) => {
         recordService.save(user.accessToken, sentence, currentRecord)
             .then(data => {
                 enqueueSnackbar('Record saved successfully!', { variant: 'success' });
-                setLoading(false);
+                setRecord(null);
+                setCurrentRecord(null);
                 next();
             }).catch(error => {
                 enqueueSnackbar('Error saving record!', { variant: 'error' });
-                setLoading(false);
                 console.error(error)
-            })
+            }).finally(afterRequest)
     }
 
     const handleRecord = (recordBlob) => {
@@ -128,15 +103,14 @@ const RecordComponent = ({ location, history, match }) => {
                                 </span>
                                 <Box className={classes.content}>
                                     <Box className={classes.mic}>
-                                        <Audio next={next} prev={prev} handleRecord={handleRecord} saveRecord={save} currentRecord={record} />
+                                        <Audio skip={skip} handleRecord={handleRecord} saveRecord={save} currentRecord={record} />
                                     </Box>
                                 </Box>
                             </Box>
                         </Container>
+                        <Backdrop className={classes.backdrop} open={loading} />
                     </div>
             }
         </div>
     );
 };
-
-export default RecordComponent;

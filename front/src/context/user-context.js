@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useCallback } from 'react';
 
-import { AuthService } from '../services/auth.service'
+import authService from '../services/auth.service'
 
 const initialState = { user: JSON.parse(sessionStorage.getItem('user')), authFailed: false }
 
@@ -8,13 +8,13 @@ const UserContext = createContext(initialState);
 
 let reducer = (state, action) => {
     switch (action.type) {
-        case "retry": {
+        case 'retry': {
             return { ...state, authFailed: false }
         }
-        case "login": {
+        case 'login': {
             return { ...state, user: action.user, authFailed: action.authFailed }
         }
-        case "logout": {
+        case 'logout': {
             sessionStorage.removeItem('user')
             return { ...state, user: undefined };
         }
@@ -30,17 +30,17 @@ function UserProvider(props) {
 
     const customDispatch = useCallback(async (action) => {
         switch (action.type) {
-            case "login": {
+            case 'login': {
                 try {
-                    const user = await AuthService.login(action.email, action.password);
+                    const user = await authService.login(action.email, action.password);
                     sessionStorage.setItem('user', JSON.stringify(user))
                     dispatch({
-                        type: "login",
+                        type: 'login',
                         user
                     });
                 } catch (e) {
                     dispatch({
-                        type: "login",
+                        type: 'login',
                         authFailed: true,
                     });
                 }
