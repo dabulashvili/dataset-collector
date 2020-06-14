@@ -1,13 +1,14 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import Audio from "./audio.component";
 import sentenceService from '../services/sentence.service';
-import { UserContext } from '../context/user-context';
+import {UserContext} from '../context/user-context';
 import recordService from '../services/record.service';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { useSnackbar } from 'notistack';
+import {useSnackbar} from 'notistack';
+import LoadingComponent from "./loading.component";
 
 const useStyles = makeStyles({
     root: {
@@ -42,13 +43,13 @@ const useStyles = makeStyles({
     }
 });
 
-const RecordComponent = ({ location, history, match }) => {
+const RecordComponent = ({location, history, match}) => {
     const classes = useStyles();
     const currentId = match.params.id;
-    const route = (id, sentence) => history.push(`/record/${id}`, { sentence })
+    const route = (id, sentence) => history.push(`/record/${id}`, {sentence})
 
-    const { enqueueSnackbar } = useSnackbar();
-    const { state: { user } } = useContext(UserContext);
+    const {enqueueSnackbar} = useSnackbar();
+    const {state: {user}} = useContext(UserContext);
     const [currentRecord, setCurrentRecord] = useState(null);
     const [sentence, setSentence] = useState(location.state ? location.state.sentence : {});
     const [allDone, setAllDone] = useState(false);
@@ -74,15 +75,18 @@ const RecordComponent = ({ location, history, match }) => {
 
     const save = () => {
         setLoading(true)
-        recordService.save(user.accessToken, sentence, currentRecord)
+        recordService
+            .save(user.accessToken, sentence, currentRecord)
             .then(data => {
-                enqueueSnackbar('Record saved successfully!', { variant: 'success' });
-                setLoading(false);
+                enqueueSnackbar('Record saved successfully!', {variant: 'success'});
                 next();
-            }).catch(error => {
-                enqueueSnackbar('Error saving record!', { variant: 'error' });
-                setLoading(false);
+            })
+            .catch(error => {
+                enqueueSnackbar('Error saving record!', {variant: 'error'});
                 console.error(error)
+            })
+            .finally(() => {
+                setLoading(false);
             })
     }
 
@@ -115,12 +119,20 @@ const RecordComponent = ({ location, history, match }) => {
             {
                 allDone
                     ? <div>
-                        <span className={classes.title} >
+                        <span className={classes.title}>
                             All Done!
                         </span>
                     </div>
                     : <div>
-                        {loading && <LinearProgress />}
+                        {
+                            loading &&
+                            (
+                                <>
+                                    <LinearProgress/>
+                                    <LoadingComponent/>
+                                </>
+                            )
+                        }
                         <Container maxWidth="sm">
                             <Box className={`${classes.root} ${loading && classes.disabled}`}>
                                 <span className={classes.title}>
@@ -128,7 +140,8 @@ const RecordComponent = ({ location, history, match }) => {
                                 </span>
                                 <Box className={classes.content}>
                                     <Box className={classes.mic}>
-                                        <Audio next={next} prev={prev} handleRecord={handleRecord} saveRecord={save} currentRecord={record} />
+                                        <Audio next={next} prev={prev} handleRecord={handleRecord} saveRecord={save}
+                                               currentRecord={record}/>
                                     </Box>
                                 </Box>
                             </Box>
