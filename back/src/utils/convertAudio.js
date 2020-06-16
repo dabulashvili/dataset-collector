@@ -5,7 +5,7 @@ module.exports = async (audioPath, outputPath) => {
         '-i',
         audioPath,
         '-acodec',
-        'pcm_u8',
+        'pcm_s16le',
         outputPath
     ]
 

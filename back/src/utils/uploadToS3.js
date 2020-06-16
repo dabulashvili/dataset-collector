@@ -14,7 +14,7 @@ module.exports = async (file, user) => {
     const fileName = `${file.filename}.wav`;
     const stream = fs.createReadStream(newPath);
     const duration = await audioDuration(newPath);
-    console.log(newPath, duration)
+    // console.log(file, newPath, duration)
 
     return new Promise(function (resolve, reject) {
         s3Client.upload({

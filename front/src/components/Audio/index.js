@@ -22,7 +22,7 @@ export default function AudioComponent({ skip, handleRecord, saveRecord, current
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             const mediaRecorder = new MediaRecorder(stream);
 
-            const audioChunks = [];
+            let audioChunks = [];
 
             mediaRecorder.addEventListener("dataavailable", event => {
                 audioChunks.push(event.data);
@@ -33,6 +33,8 @@ export default function AudioComponent({ skip, handleRecord, saveRecord, current
                 handleRecord(audioBlob)
                 const audioUrl = URL.createObjectURL(audioBlob);
                 setUrl(audioUrl)
+                console.log(audioUrl)
+                audioChunks = []
             });
 
             setRecorder(mediaRecorder)
@@ -42,18 +44,13 @@ export default function AudioComponent({ skip, handleRecord, saveRecord, current
 
     const togglePlay = () => {
         if (!play) {
-            if (!audio) {
-                let newAudio = new Audio(url)
-                newAudio.play();
-                newAudio.addEventListener('ended', () => {
-                    setPlay(false)
-                });
-                setAudio(newAudio)
-                setPlay(true)
-            } else {
-                audio.play()
-                setPlay(true)
-            }
+            let newAudio = new Audio(url)
+            newAudio.play();
+            newAudio.addEventListener('ended', () => {
+                setPlay(false)
+            });
+            setAudio(newAudio)
+            setPlay(true)
         } else {
             audio.pause()
             setPlay(false)
@@ -72,6 +69,7 @@ export default function AudioComponent({ skip, handleRecord, saveRecord, current
     const save = () => {
         saveRecord()
         setUrl('')
+        setAudio(null)
     }
 
     const handleKeyPress = (e) => {
