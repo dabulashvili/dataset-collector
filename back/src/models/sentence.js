@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const SentenceSchema = new Schema({
     _id: { type: String },
     text: { type: String },
+    order: { type: Number },
     meta: { type: Object },
 }, { collection: 'sentences' });
 
