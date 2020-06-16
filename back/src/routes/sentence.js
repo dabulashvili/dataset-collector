@@ -22,7 +22,8 @@ app.get('/list', async (req, res) => {
     const data = await Sentence.paginate({}, {
         page,
         limit,
-        lean: true
+        lean: true,
+        sort: {order: 1}
     })
     const sentenceMap = data.docs.reduce((map, s) => {
         map[s._id] = s;
@@ -43,9 +44,9 @@ app.get('/next', async (req, res) => {
         Skip.find({ user: req.user._id }).distinct('sentence'),
         Record.find({ user: req.user._id }).distinct('sentence'),
     ])
-    let nextSentence = await Sentence.findOne({ _id: { $nin: recordedSentences.concat(skips) } })
+    let nextSentence = await Sentence.findOne({ _id: { $nin: recordedSentences.concat(skips) } }).sort({ order: 1})
     if (!nextSentence && skips.length) {
-        nextSentence = await Sentence.findOne({ _id: { $nin: recordedSentences } })
+        nextSentence = await Sentence.findOne({ _id: { $nin: recordedSentences } }).sort({ order: 1})
     }
     res.json(nextSentence)
 })
