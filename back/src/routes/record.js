@@ -58,7 +58,8 @@ app.post('/save', upload.single('audio'), async (req, res) => {
             duration: parseFloat(duration)
         }).save()
     } else {
-        record.url = upload
+        record.url = url
+        record.duration = parseFloat(duration)
         record.save()
     }
     res.json(record)
