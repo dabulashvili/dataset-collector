@@ -66,6 +66,8 @@ export default function Record({ location, history, match }) {
     }
 
     useEffect(() => {
+        document.title = sentence ? sentence.text : 'Record new'
+
         if (!currentId) {
 
             next()
@@ -98,6 +100,9 @@ export default function Record({ location, history, match }) {
                         {loading && <LinearProgress />}
                         <Container maxWidth="sm">
                             <Box className={`${classes.root} ${loading && classes.disabled}`}>
+                                <span className={classes.title}>
+                                    ID - {sentence.order}
+                                </span>
                                 <span className={classes.title}>
                                     {sentence.text}
                                 </span>

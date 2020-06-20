@@ -15,6 +15,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 import qs from 'query-string';
 
+import TablePaginationActions from "../TablePaginationActions"
 import RecordService from "../../services/record.service"
 import { UserContext } from '../../context/user-context';
 
@@ -38,6 +39,7 @@ export default function RecordsList(props) {
     };
 
     useEffect(() => {
+        document.title = 'My Records'
         RecordService.list(user.accessToken, page, limit).then(data => {
             setData(data)
         })
@@ -128,10 +130,12 @@ export default function RecordsList(props) {
                         onChangePage={handleChangePage}
                         rowsPerPage={data.limit}
                         onChangeRowsPerPage={handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActions}
                     />
                     <Table className={classes.table} aria-label="simple table">
                         <TableHead>
                             <TableRow>
+                                <TableCell>ID</TableCell>
                                 <TableCell>Record</TableCell>
                                 <TableCell align="right">Action</TableCell>
                             </TableRow>
@@ -139,6 +143,7 @@ export default function RecordsList(props) {
                         <TableBody>
                             {data.docs.map((record) => (
                                 <TableRow key={record._id}>
+                                    <TableCell>{record.sentence.order}</TableCell>
                                     <TableCell component="th" scope="row">
                                         <IconButton color="primary" onClick={() => playRecord(record)}>
                                             {

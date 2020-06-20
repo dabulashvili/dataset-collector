@@ -24,5 +24,8 @@ export default makeStyles({
     },
     skipedRow: {
         backgroundColor: '#e3f2fd'
+    },
+    recordedRow: {
+        backgroundColor: '#e8f5e9'
     }
 });

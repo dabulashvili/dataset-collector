@@ -12,6 +12,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 import qs from 'query-string';
 
+import TablePaginationActions from "../TablePaginationActions"
 import SentenceService from "../../services/sentence.service"
 import { UserContext } from '../../context/user-context';
 import useStyles from './style'
@@ -28,6 +29,7 @@ export default function SentenceList(props) {
     };
 
     useEffect(() => {
+        document.title = 'Sentences'
         SentenceService.list(state.user.accessToken, page, limit).then(data => {
             setData(data);
         })
@@ -59,17 +61,20 @@ export default function SentenceList(props) {
                             onChangePage={handleChangePage}
                             rowsPerPage={data.limit}
                             onChangeRowsPerPage={handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
                         />
                         <Table className={classes.table} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
+                                    <TableCell>ID</TableCell>
                                     <TableCell>Sentence</TableCell>
                                     <TableCell align="right">Action</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {data.docs.map((sentence) => (
-                                    <TableRow className={sentence.skip && classes.skipedRow} key={sentence._id}>
+                                    <TableRow className={sentence.recorded && classes.recordedRow || sentence.skip && classes.skipedRow} key={sentence._id}>
+                                        <TableCell>{sentence.order}</TableCell>
                                         <TableCell component="th" scope="row">
                                             {sentence.text} {sentence.skip && ' (skipped)'}
                                         </TableCell>
@@ -87,6 +92,6 @@ export default function SentenceList(props) {
                     </TableContainer>
                 </div>
             </div>
-        </Fragment>
+        </Fragment >
     );
 }

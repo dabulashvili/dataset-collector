@@ -18,18 +18,24 @@ async function insertSerntences(db) {
         crlfDelay: Infinity
     });
 
-    let index = 0;
+    let index = 1;
     for await (const line of rl) {
         let s = line.trim()
         let hash = crypto.createHash('md5').update(s).digest("hex");
-        let sentence = {
-            _id: `${hash}`,
-            hash,
-            text: s,
-            order: index++,
-            length: s.length
+        let st = await collection.findOne({_id: hash})
+        if (st) {
+            console.log(`Skipped line ${index}`)
+        } else {
+            let sentence = {
+                _id: `${hash}`,
+                hash,
+                text: s,
+                order: index,
+                length: s.length
+            }
+            collection.updateOne({ _id: sentence._id }, { $set: sentence }, { upsert: true })
         }
-        collection.updateOne({ _id: sentence._id }, { $set: sentence }, { upsert: true })
+        index++;
     }
 }
 
