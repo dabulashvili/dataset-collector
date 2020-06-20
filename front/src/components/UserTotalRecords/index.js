@@ -21,7 +21,7 @@ export default function RecordsList(props) {
         RecordService.totals(user.accessToken).then(data => {
             setUserRecords(data)
         })
-    })
+    }, [])
 
     const recordedString = (totalRecorded) => {
         let decimal = (totalRecorded % 1).toFixed(2).substring(2);
