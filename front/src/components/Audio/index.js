@@ -12,11 +12,11 @@ import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 
 import useStyles from './style'
 
-export default function AudioComponent({ prev, skip, handleRecord, saveRecord, currentRecord }) {
+export default function AudioComponent({ prev, skip, handleRecord, saveRecord, currentUrl }) {
     const classes = useStyles();
     const [recording, setRecording] = useState(false);
     const [recorder, setRecorder] = useState(undefined);
-    const [url, setUrl] = useState(currentRecord ? currentRecord.url || '' : '');
+    const [url, setUrl] = useState('');
     const [play, setPlay] = useState(false);
     const [audio, setAudio] = useState(null);
 
@@ -46,7 +46,7 @@ export default function AudioComponent({ prev, skip, handleRecord, saveRecord, c
 
     const togglePlay = () => {
         if (!play) {
-            let newAudio = new Audio(url)
+            let newAudio = new Audio(url || currentUrl)
             newAudio.play();
             newAudio.addEventListener('ended', () => {
                 setPlay(false)
@@ -91,7 +91,7 @@ export default function AudioComponent({ prev, skip, handleRecord, saveRecord, c
             <TextField autoFocus onKeyDown={handleKeyPress} style={{ width: 0 }} />
             <Box className={classes.mic}>
                 <Tooltip title={play ? "Pause" : "Play"}>
-                    <IconButton color="primary" disabled={!url} onClick={togglePlay}>
+                    <IconButton color="primary" disabled={!url && !currentUrl} onClick={togglePlay}>
                         {
                             play
                                 ? <PauseIcon fontSize="large" />
@@ -118,11 +118,11 @@ export default function AudioComponent({ prev, skip, handleRecord, saveRecord, c
                 </Tooltip>
             </Box>
 
-            {/* <Tooltip title="Previous">
+            <Tooltip title="Previous">
                 <IconButton variant="outlined" color="primary" onClick={prev}>
                     <SkipPreviousIcon />
                 </IconButton>
-            </Tooltip> */}
+            </Tooltip>
             <Tooltip title="Skip">
                 <IconButton variant="outlined" color="primary" onClick={skip}>
                     <SkipNextIcon />

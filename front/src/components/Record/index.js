@@ -83,7 +83,7 @@ export default function Record({ location, history, match }) {
                 setLoading(false)
             })
         }
-    }, [currentId])
+    }, [currentId, user.accessToken])
 
     return (
         <div>
@@ -106,7 +106,7 @@ export default function Record({ location, history, match }) {
                                 </span>
                                 <Box className={classes.content}>
                                     <Box className={classes.mic}>
-                                        <Audio prev={prev} skip={skip} handleRecord={handleRecord} saveRecord={save} currentRecord={record} />
+                                        <Audio prev={prev} skip={skip} handleRecord={handleRecord} saveRecord={save} currentUrl={record && record.url} />
                                     </Box>
                                 </Box>
                             </Box>
