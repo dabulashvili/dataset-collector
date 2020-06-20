@@ -7,6 +7,7 @@ const UsersSchema = new Schema({
     firstName: {type: String, index: true},
     lastName: {type: String, index: true},
     password: String,
+    role: String
 }, {
     collection: 'users',
 });

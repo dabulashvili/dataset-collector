@@ -3,6 +3,19 @@ import baseUrl from './base-url';
 import { handleResponse } from '../helpers/handle-response';
 import qs from 'query-string';
 
+function totals(token) {
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    };
+
+    return fetch(`${baseUrl}record/totals`, requestOptions)
+        .then(handleResponse)
+}
+
 function total(token) {
     const requestOptions = {
         method: 'GET',
@@ -70,4 +83,5 @@ export default {
     getById,
     save,
     total,
+    totals,
 };

@@ -33,6 +33,25 @@ app.get('/total', async (req, res) => {
     res.json(totalRecord[0])
 })
 
+app.get('/totals', async (req, res) => {
+    const aggregate = []
+
+    if (req.user.role !== 'admin') {
+        aggregate.push({ $match: { 'user': req.user._id } })
+    }
+
+    aggregate.push({
+        $group: {
+            _id: "$user",
+            sentences: { $sum: 1 },
+            totalRecorded: { $sum: "$duration" }
+        }
+    })
+    let totalRecord = await Record.aggregate(aggregate)
+
+    res.json(totalRecord)
+})
+
 app.get('/:sentenceId', async (req, res) => {
     let record = await Record.findOne({ user: req.user._id, sentence: req.params.sentenceId })
     res.json(record)
