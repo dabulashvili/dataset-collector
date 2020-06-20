@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
 import MicIcon from "@material-ui/icons/Mic";
 import Box from "@material-ui/core/Box";
 import PauseIcon from '@material-ui/icons/Pause';
 import TextField from "@material-ui/core/TextField";
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import SaveIcon from '@material-ui/icons/Save';
+import Tooltip from '@material-ui/core/Tooltip';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 
 import useStyles from './style'
 
-export default function AudioComponent({ skip, handleRecord, saveRecord, currentRecord }) {
+export default function AudioComponent({ prev, skip, handleRecord, saveRecord, currentRecord }) {
     const classes = useStyles();
     const [recording, setRecording] = useState(false);
     const [recorder, setRecorder] = useState(undefined);
@@ -88,31 +90,44 @@ export default function AudioComponent({ skip, handleRecord, saveRecord, current
         <Box>
             <TextField autoFocus onKeyDown={handleKeyPress} style={{ width: 0 }} />
             <Box className={classes.mic}>
-                <IconButton color="primary" disabled={!url} onClick={togglePlay}>
-                    {
-                        play
-                            ? <PauseIcon fontSize="large" />
-                            : <PlayArrowIcon fontSize="large" />
-                    }
-                </IconButton>
-                <IconButton
-                    onClick={toggleRecording}
-                    className={classes.button}
-                    aria-label="add an alarm">
-                    {
-                        recording
-                            ? <PauseIcon fontSize="large" />
-                            : <MicIcon fontSize="large" />
-                    }
-                </IconButton>
-                <IconButton color="primary" disabled={!url} onClick={save}>
-                    <SaveIcon fontSize="large" />
-                </IconButton>
+                <Tooltip title={play ? "Pause" : "Play"}>
+                    <IconButton color="primary" disabled={!url} onClick={togglePlay}>
+                        {
+                            play
+                                ? <PauseIcon fontSize="large" />
+                                : <PlayArrowIcon fontSize="large" />
+                        }
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title={recording ? "Stop" : "Record"}>
+                    <IconButton
+                        onClick={toggleRecording}
+                        className={classes.button}
+                        aria-label="add an alarm">
+                        {
+                            recording
+                                ? <PauseIcon fontSize="large" />
+                                : <MicIcon fontSize="large" />
+                        }
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Save">
+                    <IconButton color="primary" disabled={!url} onClick={save}>
+                        <SaveIcon fontSize="large" />
+                    </IconButton>
+                </Tooltip>
             </Box>
 
-            <Button variant="outlined" color="primary" onClick={skip}>
-                Skip sentence
-            </Button>
+            {/* <Tooltip title="Previous">
+                <IconButton variant="outlined" color="primary" onClick={prev}>
+                    <SkipPreviousIcon />
+                </IconButton>
+            </Tooltip> */}
+            <Tooltip title="Skip">
+                <IconButton variant="outlined" color="primary" onClick={skip}>
+                    <SkipNextIcon />
+                </IconButton>
+            </Tooltip>
 
         </Box>
     );

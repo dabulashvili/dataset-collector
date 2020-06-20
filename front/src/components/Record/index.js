@@ -31,9 +31,12 @@ export default function Record({ location, history, match }) {
     const skip = () => {
         setLoading(true)
         sentenceService.skip(user.accessToken, currentId).then(data => {
-            console.log(data)
             next()
         }).finally(afterRequest)
+    }
+
+    const prev = () => {
+        history.goBack()
     }
 
     const next = () => {
@@ -69,19 +72,14 @@ export default function Record({ location, history, match }) {
         document.title = sentence ? sentence.text : 'Record new'
 
         if (!currentId) {
-
             next()
         } else {
             Promise.all([
-                recordService.getById(user.accessToken, currentId).then(data => {
-                    setRecord(data);
-                    return
-                }),
-                sentenceService.getById(user.accessToken, currentId).then(data => {
-                    setSentence(data);
-                    return
-                })
-            ]).then(() => {
+                recordService.getById(user.accessToken, currentId),
+                sentenceService.getById(user.accessToken, currentId)
+            ]).then(([record, sentence]) => {
+                setRecord(record);
+                setSentence(sentence);
                 setLoading(false)
             })
         }
@@ -108,7 +106,7 @@ export default function Record({ location, history, match }) {
                                 </span>
                                 <Box className={classes.content}>
                                     <Box className={classes.mic}>
-                                        <Audio skip={skip} handleRecord={handleRecord} saveRecord={save} currentRecord={record} />
+                                        <Audio prev={prev} skip={skip} handleRecord={handleRecord} saveRecord={save} currentRecord={record} />
                                     </Box>
                                 </Box>
                             </Box>

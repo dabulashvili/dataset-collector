@@ -30,7 +30,7 @@ function App() {
     <Router>
       <UserProvider>
         <Route path='/login' component={LogIn} />
-        <SnackbarProvider>
+        <SnackbarProvider autoHideDuration={1000}>
           <PrivateRoute path='/' exact component={() => <Redirect to='/sentences' />} />
           <PrivateRoute path='/sentences' exact component={SentenceList} />
           <PrivateRoute path='/records' component={RecordsList} />
