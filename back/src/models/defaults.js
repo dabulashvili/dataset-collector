@@ -20,6 +20,7 @@ const users = [
     { _id: 'natia', 'email': 'natia@tts.ge', 'passwordHash': '$2b$10$n5Qvt9KCVgTFrMBjobfzhuJ4PLvimKWyB6o.T9gS0vu0IHOOvdfHi', 'name': 'Natia' },
     { _id: 'mari', 'email': 'mari@tts.ge', 'passwordHash': '$2b$10$T1l/wptccSIwQcj4pZaHUOh1PknMCl.rKzIOUBpWRXSBVsGHYMpBS', 'name': 'Mari' },
     { _id: 'tiko', 'email': 'tiko@tts.ge', 'passwordHash': '$2b$10$BfJJ18c4cpgEXjPqPaznQ.tLhhejl/ZgwuSipBWv7iuMYRw9fC8A6', 'name': 'Tiko' },
+    { _id: 'zura', 'email': 'zura@tts.ge', 'passwordHash': '$2b$10$rxrNMXl3dhmhEcGJ1vFGUuNGi7Ptk7NmUuVLXzeuR3oMJmXe8VBva', 'name': 'Zura' },
 ]
 
 async function insertSerntences(db) {
