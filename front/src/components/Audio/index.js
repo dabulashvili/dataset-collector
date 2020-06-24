@@ -9,6 +9,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import Tooltip from '@material-ui/core/Tooltip';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import Recorder from 'recorder-js';
 
 import useStyles from './style'
 
@@ -21,27 +22,31 @@ export default function AudioComponent({ prev, skip, handleRecord, saveRecord, c
     const [audio, setAudio] = useState(null);
 
     useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            const mediaRecorder = new MediaRecorder(stream);
 
-            let audioChunks = [];
-
-            mediaRecorder.addEventListener("dataavailable", event => {
-                audioChunks.push(event.data);
-            });
-
-            mediaRecorder.addEventListener("stop", () => {
-                const audioBlob = new Blob(audioChunks, { type: "audio/mpeg-3" });
-                handleRecord(audioBlob)
-                const audioUrl = URL.createObjectURL(audioBlob);
-                setUrl(audioUrl)
-                console.log(audioUrl)
-                audioChunks = []
-            });
-
-            setRecorder(mediaRecorder)
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const recorder = new Recorder(audioContext, {
+            // An array of 255 Numbers
+            // You can use this to visualize the audio stream
+            // If you use react, check out react-wave-stream
+            // onAnalysed: data => console.log(data)
         });
-        return setRecorder(false)
+
+
+        let stream;
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(s => {
+                recorder.init(s)
+                stream = s
+            })
+            .catch(err => console.log('Uh oh... unable to get stream...', err));
+
+        setRecorder(recorder)
+        setRecording(false)
+        return () => {
+            if (stream) {
+                stream.getTracks().forEach((track) => track.stop());
+            }
+        }
     }, [])
 
     const togglePlay = () => {
@@ -61,7 +66,10 @@ export default function AudioComponent({ prev, skip, handleRecord, saveRecord, c
 
     const toggleRecording = () => {
         if (recording) {
-            recorder.stop()
+            recorder.stop().then(({ blob, buffer }) => {
+                handleRecord(blob)
+                setUrl(URL.createObjectURL(blob))
+            })
         } else {
             recorder.start()
         }
@@ -117,7 +125,6 @@ export default function AudioComponent({ prev, skip, handleRecord, saveRecord, c
                     </IconButton>
                 </Tooltip>
             </Box>
-
             <Tooltip title="Previous">
                 <IconButton variant="outlined" color="primary" onClick={prev}>
                     <SkipPreviousIcon />

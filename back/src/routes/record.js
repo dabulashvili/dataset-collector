@@ -15,6 +15,7 @@ app.get('/list', async (req, res) => {
         limit,
         lean: true,
         populate: 'sentence',
+        sort: '-recordDate'
     })
     res.json(records)
 })

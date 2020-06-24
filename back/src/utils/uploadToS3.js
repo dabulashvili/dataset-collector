@@ -2,18 +2,15 @@ const fs = require('fs')
 
 const { s3 } = require('../config')
 const createS3Client = require('../utils/createS3Client')
-const convertAudio = require('../utils/convertAudio')
 const audioDuration = require('../utils/audioDuration')
 
 const s3Client = createS3Client(s3)
 
 module.exports = async (file, user) => {
-    const newPath = `${file.path}.wav`;
-    await convertAudio(file.path, newPath);
-    const stat = await fs.promises.stat(newPath);
+    const stat = await fs.promises.stat(file.path);
     const fileName = `${file.filename}.wav`;
-    const stream = fs.createReadStream(newPath);
-    const duration = await audioDuration(newPath);
+    const stream = fs.createReadStream(file.path);
+    const duration = await audioDuration(file.path);
     // console.log(file, newPath, duration)
 
     return new Promise(function (resolve, reject) {
@@ -21,7 +18,7 @@ module.exports = async (file, user) => {
             Metadata: {
                 'Original-Name': fileName
             },
-            ContentType: 'audio/mpeg',
+            ContentType: 'audio/x-wav',
             ContentLength: stat.size,
             Bucket: s3.bucket,
             Key: `${user}/${fileName}`,
