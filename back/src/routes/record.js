@@ -28,7 +28,8 @@ app.get('/total', async (req, res) => {
                 _id: "duration",
                 totalRecorded: { $sum: "$duration" }
             }
-        }
+        },
+        { $sort: { totalRecorded : -1 } }
     ])
 
     res.json(totalRecord[0])
@@ -46,8 +47,9 @@ app.get('/totals', async (req, res) => {
             _id: "$user",
             sentences: { $sum: 1 },
             totalRecorded: { $sum: "$duration" }
-        }
+        },
     })
+    aggregate.push({ $sort: { totalRecorded : -1 } })
     let totalRecord = await Record.aggregate(aggregate)
 
     res.json(totalRecord)
