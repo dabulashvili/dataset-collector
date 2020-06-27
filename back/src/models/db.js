@@ -8,8 +8,8 @@ module.exports = (mongoUrl) => {
         useCreateIndex: true,
     }).then(function () {
         console.log('Connected to DB')
-        insertUsers(mongoose.connection.db);
-        insertSerntences(mongoose.connection.db);
+        // insertUsers(mongoose.connection.db);
+        // insertSerntences(mongoose.connection.db);
     }).catch(function (err) {
         console.error(err)
     });
