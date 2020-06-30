@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const Record = require('../models/record')
+const Sentence = require('../models/sentence')
 const upload = require('../utils/createMulterMiddleware')
 const uploadToS3 = require('../utils/uploadToS3')
 
@@ -36,7 +37,12 @@ app.get('/total', async (req, res) => {
 })
 
 app.get('/totals', async (req, res) => {
-    const aggregate = []
+
+    const ids = await Sentence.find({}).distinct('_id')
+
+    const aggregate = [{
+        $match: { sentence: {$in: ids} }
+    }]
 
     if (req.user.role !== 'admin') {
         aggregate.push({ $match: { 'user': req.user._id } })
