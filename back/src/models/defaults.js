@@ -4,6 +4,14 @@ const crypto = require('crypto');
 
 const users = [
     {
+        _id: 'admin',
+        'email': 'admin@tts.ge',
+        'passwordHash': '$2b$10$0NYhuoYb8oSHedZAYHk8xOYmS7GeTk/NxglG7AcAkB9UPyFa8Hz1C',
+        'name': 'Admin',
+        'role': 'admin',
+    },
+    { _id: 'user', 'email': 'user@tts.ge', 'passwordHash': '$2b$10$zGB7hephoOGiv9EIszpvBukSR3Y20fycthMZgFwYSu.zDgSl9x9gK', 'name': 'User' },
+    {
         _id: 'davit',
         'email': 'davit@tts.ge',
         'passwordHash': '$2b$10$xTRFdH0fqV3Q4Hh2HJx4eOaohN/GlfYSPqy8iIze8sFHw9TNnIAeC',

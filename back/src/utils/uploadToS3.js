@@ -3,10 +3,12 @@ const fs = require('fs')
 const { s3 } = require('../config')
 const createS3Client = require('../utils/createS3Client')
 const audioDuration = require('../utils/audioDuration')
+const initBucket = require('../utils/initBucket')
 
 const s3Client = createS3Client(s3)
 
 module.exports = async (file, user) => {
+    await initBucket(s3Client, s3.bucket)
     const stat = await fs.promises.stat(file.path);
     const fileName = `${file.filename}.wav`;
     const stream = fs.createReadStream(file.path);
