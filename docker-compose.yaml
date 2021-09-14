@@ -44,6 +44,7 @@ services:
     stdin_open: true
     volumes:
       - './front:/app'
+      - '/app/node_modules'
     ports:
       - 3001:3000
     environment:
