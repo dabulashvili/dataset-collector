@@ -1,19 +1,19 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const mongoose = require('./models/db');
+const express = require('express')
+const app = express()
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const mongoose = require('./models/db')
 const router = require('./routes/route')
 
-module.exports = configs => {
-    app.use(cors());
-    app.use(bodyParser.json());
+module.exports = (configs) => {
+    app.use(cors())
+    app.use(bodyParser.json())
 
-    mongoose(configs.mongoUrl);
+    mongoose(configs.mongoUrl)
 
-    app.use('/api', router);
+    app.use('/api', router)
 
     app.listen(configs.port, function () {
-        console.log(`Server is running on Port: ${configs.port}`);
-    });
+        console.log(`Server is running on Port: ${configs.port}`)
+    })
 }

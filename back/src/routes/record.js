@@ -1,68 +1,74 @@
-const express = require('express');
-const mongoose = require('mongoose');
+const express = require('express')
 
 const Record = require('../models/record')
 const Sentence = require('../models/sentence')
 const upload = require('../utils/createMulterMiddleware')
 const uploadToS3 = require('../utils/uploadToS3')
 
-const app = express.Router();
+const app = express.Router()
 
 app.get('/list', async (req, res) => {
-    let page = req.query.page ? parseInt(req.query.page) : 1;
-    let limit = req.query.limit ? parseInt(req.query.limit) : 10;
-    const records = await Record.paginate({ user: req.user._id }, {
-        page,
-        limit,
-        lean: true,
-        populate: 'sentence',
-        sort: '-recordDate'
-    })
+    let page = req.query.page ? parseInt(req.query.page) : 1
+    let limit = req.query.limit ? parseInt(req.query.limit) : 10
+    const records = await Record.paginate(
+        { user: req.user._id },
+        {
+            page,
+            limit,
+            lean: true,
+            populate: 'sentence',
+            sort: '-recordDate',
+        }
+    )
     res.json(records)
 })
 
 app.get('/total', async (req, res) => {
     let totalRecord = await Record.aggregate([
-        { $match: { 'user': req.user._id } },
+        { $match: { user: req.user._id } },
         {
             $group: {
-                _id: "duration",
-                totalRecorded: { $sum: "$duration" }
-            }
+                _id: 'duration',
+                totalRecorded: { $sum: '$duration' },
+            },
         },
-        { $sort: { totalRecorded : -1 } }
+        { $sort: { totalRecorded: -1 } }
     ])
 
     res.json(totalRecord[0])
 })
 
 app.get('/totals', async (req, res) => {
-
     const ids = await Sentence.find({}).distinct('_id')
 
-    const aggregate = [{
-        $match: { sentence: {$in: ids} }
-    }]
+    const aggregate = [
+        {
+            $match: { sentence: { $in: ids } },
+        }
+    ]
 
     if (req.user.role !== 'admin') {
-        aggregate.push({ $match: { 'user': req.user._id } })
+        aggregate.push({ $match: { user: req.user._id } })
     }
 
     aggregate.push({
         $group: {
-            _id: "$user",
+            _id: '$user',
             sentences: { $sum: 1 },
-            totalRecorded: { $sum: "$duration" }
+            totalRecorded: { $sum: '$duration' },
         },
     })
-    aggregate.push({ $sort: { totalRecorded : -1 } })
+    aggregate.push({ $sort: { totalRecorded: -1 } })
     let totalRecord = await Record.aggregate(aggregate)
 
     res.json(totalRecord)
 })
 
 app.get('/:sentenceId', async (req, res) => {
-    let record = await Record.findOne({ user: req.user._id, sentence: req.params.sentenceId })
+    let record = await Record.findOne({
+        user: req.user._id,
+        sentence: req.params.sentenceId,
+    })
     res.json(record)
 })
 
@@ -83,7 +89,7 @@ app.post('/save', upload.single('audio'), async (req, res) => {
             sentence: req.body.sentence,
             user: req.user._id,
             url,
-            duration: parseFloat(duration)
+            duration: parseFloat(duration),
         }).save()
     } else {
         record.url = url
@@ -93,4 +99,4 @@ app.post('/save', upload.single('audio'), async (req, res) => {
     res.json(record)
 })
 
-module.exports = app;
+module.exports = app

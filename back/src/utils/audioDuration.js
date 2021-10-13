@@ -4,7 +4,7 @@ module.exports = async (audioPath) => {
     const args = [
         'ffprobe',
         '-v',
-        'error', 
+        'error',
         '-show_entries',
         'format=duration',
         '-of',

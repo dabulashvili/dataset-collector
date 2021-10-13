@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt')
 
 const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const lower = 'abcdefghijklmnopqrstuvwxyz'
@@ -42,7 +42,7 @@ function password(length) {
 
 const pass = process.argv[2] || password(10)
 
-bcrypt.hash(pass, 10).then(hash => {
+bcrypt.hash(pass, 10).then((hash) => {
     console.log('Password: ', pass)
     console.log('Hash: ', hash)
 })

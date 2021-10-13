@@ -6,7 +6,7 @@ var storage = multer.diskStorage({
     destination: '/tmp/geo-tts',
     filename: function (req, file, cb) {
         cb(null, generateUniqueWord() + '-' + Date.now())
-    }
+    },
 })
 
 const upload = multer({ storage: storage })

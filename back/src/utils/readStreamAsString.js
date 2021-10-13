@@ -1,7 +1,7 @@
-module.exports = stream => {
-    return new Promise((resolve, reject) => {
+module.exports = (stream) =>
+    new Promise((resolve, reject) => {
         let buffer = new Buffer.from([])
-        stream.on('data', chunk => {
+        stream.on('data', (chunk) => {
             buffer = Buffer.concat([buffer, chunk])
         })
 
@@ -17,6 +17,5 @@ module.exports = stream => {
             resolve(buffer.toString())
         })
 
-        stream.on('error', err => reject(err))
+        stream.on('error', (err) => reject(err))
     })
-}
