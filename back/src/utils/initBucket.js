@@ -1,6 +1,6 @@
 module.exports = (s3Client, bucket) => {
     const bucketParams = {
-        Bucket : bucket
+        Bucket : bucket,
     }
 
     return new Promise((resolve, reject) => {
@@ -16,6 +16,6 @@ module.exports = (s3Client, bucket) => {
             } else {
                 resolve(bucketData)
             }
-        });
+        })
     })
 }
