@@ -1,21 +1,21 @@
-import React, { useContext } from 'react';
-import { NavLink } from "react-router-dom";
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import React, { useContext } from 'react'
+import { NavLink } from 'react-router-dom'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
-import { UserContext } from '../../context/user-context';
-import useStyles from './style';
+import { UserContext } from '../../context/user-context'
+import useStyles from './style'
 
 export default function TopBar({ children }) {
 
-    const classes = useStyles();
+    const classes = useStyles()
 
-    const { state, dispatch } = useContext(UserContext);
+    const { state, dispatch } = useContext(UserContext)
 
     return (
         <div>
@@ -46,5 +46,5 @@ export default function TopBar({ children }) {
             </AppBar >
             {children}
         </div>
-    );
+    )
 }

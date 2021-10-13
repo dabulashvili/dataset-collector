@@ -1,10 +1,10 @@
-import baseUrl from './base-url';
+import baseUrl from './base-url'
 
-import { handleResponse } from '../helpers/handle-response';
+import { handleResponse } from '../helpers/handle-response'
 
 function logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem('user');
+    localStorage.removeItem('user')
 }
 
 function login(email, password) {
@@ -12,8 +12,8 @@ function login(email, password) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-    };
+        body: JSON.stringify({ email, password }),
+    }
 
     return fetch(`${baseUrl}auth/login`, requestOptions)
         .then(handleResponse)
@@ -22,4 +22,4 @@ function login(email, password) {
 export default {
     login,
     logout,
-};
+}

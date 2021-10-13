@@ -1,6 +1,6 @@
-import baseUrl from './base-url';
+import baseUrl from './base-url'
 
-import { handleResponse } from '../helpers/handle-response';
+import { handleResponse } from '../helpers/handle-response'
 import qs from 'query-string'
 
 function list(token, page, limit) {
@@ -11,11 +11,11 @@ function list(token, page, limit) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
         },
-    };
+    }
 
     const query = qs.stringify({
         page,
-        limit
+        limit,
     })
     return fetch(`${baseUrl}sentence/list?${query}`, requestOptions)
         .then(handleResponse)
@@ -28,7 +28,7 @@ function getById(token, id) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
         },
-    };
+    }
 
     return fetch(`${baseUrl}sentence/${id}`, requestOptions)
         .then(handleResponse)
@@ -41,7 +41,7 @@ function next(token) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
         },
-    };
+    }
 
     return fetch(`${baseUrl}sentence/next`, requestOptions)
         .then(handleResponse)
@@ -54,7 +54,7 @@ function skip(token, id) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
         },
-    };
+    }
 
     return fetch(`${baseUrl}sentence/skip/${id}`, requestOptions)
         .then(handleResponse)
@@ -66,4 +66,4 @@ export default {
     getById,
     next,
     skip,
-};
+}

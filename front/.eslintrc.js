@@ -1,11 +1,17 @@
 module.exports = {
     env: {
-        commonjs: true,
-        es2021: true,
-        node: true,
+        'browser': true,
+        'jest': true,
+        'es6': true,
+        'node': true,
     },
-    extends: 'eslint:recommended',
+    plugins: ['import'],
+    extends: [
+        'eslint:recommended',
+        'plugin:react/recommended'
+    ],
     parserOptions: {
+        ecmaVersion: 2020,
         parser: '@babel/eslint-parser',
         sourceType: 'module',
     },
@@ -26,5 +32,6 @@ module.exports = {
                 functions: 'never',
             }
         ],
+        'react/prop-types': [0],
     },
 }

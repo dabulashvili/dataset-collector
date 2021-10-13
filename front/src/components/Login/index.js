@@ -1,38 +1,38 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Redirect } from "react-router-dom";
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import Alert from '@material-ui/lab/Alert';
+import React, { useState, useContext, useEffect } from 'react'
+import { Redirect } from 'react-router-dom'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import TextField from '@material-ui/core/TextField'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Typography from '@material-ui/core/Typography'
+import Container from '@material-ui/core/Container'
+import Alert from '@material-ui/lab/Alert'
 
 import { UserContext } from '../../context/user-context'
 import useStyles from './style'
 
-export default function LogIn(props) {
+export default function LogIn() {
 
     const { state, dispatch } = useContext(UserContext)
 
-    const classes = useStyles();
+    const classes = useStyles()
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
     useEffect(() => {
         document.title = 'Login'
-    }, []);
+    }, [])
 
     const emailChange = (event) => {
-        setEmail(event.target.value);
+        setEmail(event.target.value)
     }
 
     const passwordChange = (event) => {
-        setPassword(event.target.value);
+        setPassword(event.target.value)
     }
 
     const login = async (event) => {
@@ -102,5 +102,5 @@ export default function LogIn(props) {
                 </form>
             </div>
         </Container>
-    );
+    )
 }

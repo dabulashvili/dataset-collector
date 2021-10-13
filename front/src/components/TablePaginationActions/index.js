@@ -1,34 +1,34 @@
-import React from 'react';
-import { useTheme } from '@material-ui/core/styles';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
-import IconButton from '@material-ui/core/IconButton';
-import PropTypes from 'prop-types';
-import useStyles from './style';
+import React from 'react'
+import { useTheme } from '@material-ui/core/styles'
+import FirstPageIcon from '@material-ui/icons/FirstPage'
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
+import LastPageIcon from '@material-ui/icons/LastPage'
+import IconButton from '@material-ui/core/IconButton'
+import PropTypes from 'prop-types'
+import useStyles from './style'
 
 
 function TablePaginationActions(props) {
-    const classes = useStyles();
-    const theme = useTheme();
-    const { count, page, rowsPerPage, onChangePage } = props;
+    const classes = useStyles()
+    const theme = useTheme()
+    const { count, page, rowsPerPage, onChangePage } = props
 
     const handleFirstPageButtonClick = (event) => {
-        onChangePage(event, 0);
-    };
+        onChangePage(event, 0)
+    }
 
     const handleBackButtonClick = (event) => {
-        onChangePage(event, page - 1);
-    };
+        onChangePage(event, page - 1)
+    }
 
     const handleNextButtonClick = (event) => {
-        onChangePage(event, page + 1);
-    };
+        onChangePage(event, page + 1)
+    }
 
     const handleLastPageButtonClick = (event) => {
-        onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-    };
+        onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
+    }
 
     return (
         <div className={classes.root}>
@@ -57,7 +57,7 @@ function TablePaginationActions(props) {
                 {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
             </IconButton>
         </div>
-    );
+    )
 }
 
 TablePaginationActions.propTypes = {
@@ -65,6 +65,6 @@ TablePaginationActions.propTypes = {
     onChangePage: PropTypes.func.isRequired,
     page: PropTypes.number.isRequired,
     rowsPerPage: PropTypes.number.isRequired,
-};
+}
 
-export default TablePaginationActions;
+export default TablePaginationActions

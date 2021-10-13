@@ -1,28 +1,28 @@
-import React, { useEffect, useContext, useState } from 'react';
-import Box from "@material-ui/core/Box";
-import Container from '@material-ui/core/Container';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Backdrop from '@material-ui/core/Backdrop';
-import { useSnackbar } from 'notistack';
+import React, { useEffect, useContext, useState } from 'react'
+import Box from '@material-ui/core/Box'
+import Container from '@material-ui/core/Container'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Backdrop from '@material-ui/core/Backdrop'
+import { useSnackbar } from 'notistack'
 
-import Audio from '../Audio';
-import { UserContext } from '../../context/user-context';
-import sentenceService from '../../services/sentence.service';
-import recordService from '../../services/record.service';
-import useStyles from './style';
+import Audio from '../Audio'
+import { UserContext } from '../../context/user-context'
+import sentenceService from '../../services/sentence.service'
+import recordService from '../../services/record.service'
+import useStyles from './style'
 
 export default function Record({ location, history, match }) {
-    const classes = useStyles();
-    const currentId = match.params.id;
+    const classes = useStyles()
+    const currentId = match.params.id
     const route = (id, sentence) => history.push(`/record/${id}`, { sentence })
 
-    const { enqueueSnackbar } = useSnackbar();
-    const { state: { user } } = useContext(UserContext);
-    const [currentRecord, setCurrentRecord] = useState(null);
-    const [sentence, setSentence] = useState(location.state ? location.state.sentence : {});
-    const [allDone, setAllDone] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [record, setRecord] = useState(null);
+    const { enqueueSnackbar } = useSnackbar()
+    const { state: { user } } = useContext(UserContext)
+    const [currentRecord, setCurrentRecord] = useState(null)
+    const [sentence, setSentence] = useState(location.state ? location.state.sentence : {})
+    const [allDone, setAllDone] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [record, setRecord] = useState(null)
 
     const afterRequest = () => {
         setLoading(false)
@@ -30,7 +30,7 @@ export default function Record({ location, history, match }) {
 
     const skip = () => {
         setLoading(true)
-        sentenceService.skip(user.accessToken, currentId).then(data => {
+        sentenceService.skip(user.accessToken, currentId).then(() => {
             next()
         }).finally(afterRequest)
     }
@@ -53,19 +53,19 @@ export default function Record({ location, history, match }) {
     const save = () => {
         setLoading(true)
         recordService.save(user.accessToken, sentence, currentRecord)
-            .then(data => {
-                enqueueSnackbar('Record saved successfully!', { variant: 'success' });
-                setRecord(null);
-                setCurrentRecord(null);
-                next();
+            .then(() => {
+                enqueueSnackbar('Record saved successfully!', { variant: 'success' })
+                setRecord(null)
+                setCurrentRecord(null)
+                next()
             }).catch(error => {
-                enqueueSnackbar('Error saving record!', { variant: 'error' });
+                enqueueSnackbar('Error saving record!', { variant: 'error' })
                 console.error(error)
             }).finally(afterRequest)
     }
 
     const handleRecord = (recordBlob) => {
-        setCurrentRecord(recordBlob);
+        setCurrentRecord(recordBlob)
     }
 
     useEffect(() => {
@@ -78,8 +78,8 @@ export default function Record({ location, history, match }) {
                 recordService.getById(user.accessToken, currentId),
                 sentenceService.getById(user.accessToken, currentId)
             ]).then(([record, sentence]) => {
-                setRecord(record);
-                setSentence(sentence);
+                setRecord(record)
+                setSentence(sentence)
                 setLoading(false)
             })
         }
@@ -115,5 +115,5 @@ export default function Record({ location, history, match }) {
                     </div>
             }
         </div>
-    );
-};
+    )
+}

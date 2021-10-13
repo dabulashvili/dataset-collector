@@ -1,41 +1,41 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-import MicIcon from '@material-ui/icons/Mic';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import TablePagination from '@material-ui/core/TablePagination';
-import Paper from '@material-ui/core/Paper';
-import qs from 'query-string';
+import React, { useContext, useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import IconButton from '@material-ui/core/IconButton'
+import MicIcon from '@material-ui/icons/Mic'
+import PlayArrowIcon from '@material-ui/icons/PlayArrow'
+import PauseIcon from '@material-ui/icons/Pause'
+import TablePagination from '@material-ui/core/TablePagination'
+import Paper from '@material-ui/core/Paper'
+import qs from 'query-string'
 
-import TablePaginationActions from "../TablePaginationActions"
-import UserTotalRecords from "../UserTotalRecords"
-import RecordService from "../../services/record.service"
-import { UserContext } from '../../context/user-context';
+import TablePaginationActions from '../TablePaginationActions'
+import UserTotalRecords from '../UserTotalRecords'
+import RecordService from '../../services/record.service'
+import { UserContext } from '../../context/user-context'
 
 import useStyles from './style'
 
 export default function RecordsList(props) {
     const { page, limit } = qs.parse(props.location.search)
-    const classes = useStyles();
-    const history = useHistory();
-    const [data, setData] = useState({ docs: [], limit: 25, total: 0, page: page || 1, pages: 0 });
+    const classes = useStyles()
+    const history = useHistory()
+    const [data, setData] = useState({ docs: [], limit: 25, total: 0, page: page || 1, pages: 0 })
     const [currentAudio, setCurrentAudio] = useState({
         play: false,
         url: '',
-        audio: null
+        audio: null,
     })
     const { state: { user } } = useContext(UserContext)
 
     const handleClickOpen = ({ sentence }) => {
         history.push(`/record/${sentence._id}`, { sentence })
-    };
+    }
 
     useEffect(() => {
         document.title = 'My Records'
@@ -65,15 +65,15 @@ export default function RecordsList(props) {
                 currentAudio.audio.removeEventListener('ended', () => setCurrentAudio({
                     ...currentAudio,
                     play: false,
-                }));
+                }))
             }
 
-            let newAudio = new Audio(record.url);
-            newAudio.play();
+            let newAudio = new Audio(record.url)
+            newAudio.play()
             newAudio.addEventListener('ended', () => setCurrentAudio({
                 ...currentAudio,
-                play: false
-            }));
+                play: false,
+            }))
             setCurrentAudio({
                 url: record.url,
                 audio: newAudio,
@@ -85,14 +85,14 @@ export default function RecordsList(props) {
     const handleChangePage = (event, newPage) => {
         props.history.push({
             pathname: props.location.pathname,
-            search: qs.stringify({ page: newPage + 1, limit })
+            search: qs.stringify({ page: newPage + 1, limit }),
         })
     }
     const handleChangeRowsPerPage = (event) => {
-        let newLimit = parseInt(event.target.value, 10);
+        let newLimit = parseInt(event.target.value, 10)
         props.history.push({
             pathname: props.location.pathname,
-            search: qs.stringify({ page: 1, limit: newLimit })
+            search: qs.stringify({ page: 1, limit: newLimit }),
         })
     }
 
@@ -146,5 +146,5 @@ export default function RecordsList(props) {
                 </TableContainer>
             </div>
         </div>
-    );
+    )
 }
